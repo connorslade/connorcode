@@ -17,7 +17,7 @@
 			&bull;
 			<a href="/files">files</a>
 			&bull;
-			<a href="https://github.com/Basicprogrammer10">github</a>
+			<a href={GITHUB}>github</a>
 		</div>
 	</div>
 
