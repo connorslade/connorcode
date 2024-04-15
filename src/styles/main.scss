@@ -3,6 +3,11 @@
 	--text-color: rgb(163, 163, 163);
 	--alternate-text-color: rgb(245, 245, 245);
 
+	--code-color: rgb(102, 204, 187);
+	--code-background: rgb(25, 51, 46);
+	--code-link-color: rgb(71, 169, 255);
+	--code-link-background: rgb(20, 50, 76);
+
 	--link-color: #58a6ff;
 	--selected-link-color: #ac80ff;
 }
@@ -24,11 +29,27 @@ h6 {
 	color: var(--alternate-text-color);
 }
 
+code {
+	font-size: 1.1em;
+	border: 1px solid;
+	border-radius: 5px;
+	padding: 3px;
+
+	background: var(--code-background);
+	color: var(--code-color);
+}
+
 a {
 	color: var(--link-color);
+	text-decoration-style: dotted;
 
 	&::selection {
 		color: white;
 		background: var(--selected-link-color);
+	}
+
+	& code {
+		background: var(--code-link-background);
+		color: var(--code-link-color);
 	}
 }
