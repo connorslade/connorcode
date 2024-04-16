@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Admonition from '$lib/Admonition.svelte';
 	import Head from '$lib/Head.svelte';
 	import Link from '$lib/Link.svelte';
 
@@ -32,11 +31,11 @@
 </p>
 
 <p>
-	I started my<em>programming journey</em> around 2014 with the
-	<a href="https://www.arduino.cc">Arduino</a>. Then I learned how to make basic websites with HTML
-	and CSS, then how to make them interactive with JavaScript. After that, I got into Python and
-	eventually started to learn much more about Linux, Docker, different programming languages. After
-	trying many languages I eventually settled on <em>Rust</em> for most of my projects.
+	I started my <em>programming journey</em> around 2014 with the Arduino. Then I learned how to make
+	basic websites with HTML and CSS, then how to make them interactive with JavaScript. After that, I
+	got into Python and eventually started to learn much more about Linux, Docker, different
+	programming languages. After trying many languages I eventually settled on <em>Rust</em> for most of
+	my projects.
 </p>
 
 <h2>Contact</h2>

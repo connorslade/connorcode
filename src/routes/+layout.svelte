@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Link from '$lib/Link.svelte';
 	import { GITHUB, VERSION } from '$lib/consts';
+
 	import '../styles/main.scss';
 </script>
 
@@ -44,8 +45,8 @@
 	.nav {
 		display: flex;
 		justify-content: space-between;
-		align-items: flex-end;
 		margin-top: 2rem;
+		flex-wrap: wrap;
 
 		& .name {
 			margin: 0;
@@ -66,5 +67,16 @@
 
 	.footer {
 		margin-bottom: 1.5em;
+	}
+
+	@media (width <= 510px) {
+		.nav {
+			align-items: center;
+			flex-flow: column;
+
+			& .name {
+				margin-bottom: 1rem;
+			}
+		}
 	}
 </style>

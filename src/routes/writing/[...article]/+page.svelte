@@ -11,7 +11,7 @@
 
 <h1 class="title">Using libmpv in Rust</h1>
 
-<p class="date">published 07/09/2023 &bull; 206 words &bull; 2m reading time</p>
+<span class="date">published 07/09/2023 &bull; 206 words &bull; 2m reading time</span>
 
 <p>
 	I recently finish a project I had been wanting to work on for a long time (<a href=""
