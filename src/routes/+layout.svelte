@@ -15,8 +15,6 @@
 			&bull;
 			<a href="/writing">writing</a>
 			&bull;
-			<a href="/about">about</a>
-			&bull;
 			<a href="/files">files</a>
 			&bull;
 			<Link href={GITHUB}>github</Link>
