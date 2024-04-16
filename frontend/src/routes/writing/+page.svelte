@@ -1,13 +1,15 @@
 <script lang="ts">
-	import Head from '$lib/Head.svelte';
+	import Head from '$lib/components/Head.svelte';
 </script>
 
 <Head title="Writing" description="todo" />
 
 <h1>Writing</h1>
 
-Here are some random things I have written about.
-You can also view them by category.
+<p>
+	Here are some random things I have written about. To get notified when new posts are published,
+	you can subscribe to the <a href="/">RSS feed</a>.
+</p>
 
 <h2>2023</h2>
 <h3>September</h3>
@@ -32,3 +34,16 @@ You can also view them by category.
 		with libmpv-rs in rust
 	</li>
 </ul>
+
+<style lang="scss">
+	.article {
+		background: rgb(19, 19, 19);
+		padding: 10px;
+		border-radius: 5px;
+
+		& .title-line {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+</style>
