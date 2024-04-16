@@ -6,9 +6,11 @@
 
 <div class="root">
 	<div class="nav">
-		<p class="name" on:click={() => (window.location.href = '/')}>Connor Slade</p>
+		<a class="name" href="/">Connor Slade</a>
 
 		<div class="links">
+			<a href="/">home</a>
+			&bull;
 			<a href="/projects">projects</a>
 			&bull;
 			<a href="/writing">writing</a>
@@ -17,7 +19,7 @@
 			&bull;
 			<a href="/files">files</a>
 			&bull;
-			<a href={GITHUB}>github</a>
+			<Link href={GITHUB}>github</Link>
 		</div>
 	</div>
 
@@ -50,7 +52,12 @@
 		& .name {
 			margin: 0;
 			font-size: 1.2em;
-			cursor: pointer;
+			color: var(--alternate-text-color);
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 	}
 

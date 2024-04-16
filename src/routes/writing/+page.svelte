@@ -6,6 +6,9 @@
 
 <h1>Writing</h1>
 
+Here are some random things I have written about.
+You can also view them by category.
+
 <h2>2023</h2>
 <h3>September</h3>
 <ul>

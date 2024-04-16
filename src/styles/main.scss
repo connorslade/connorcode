@@ -48,6 +48,10 @@ a {
 		background: var(--selected-link-color);
 	}
 
+	&:hover {
+		text-decoration-style: solid;
+	}
+
 	& code {
 		background: var(--code-link-background);
 		color: var(--code-link-color);
