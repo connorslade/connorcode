@@ -29,7 +29,7 @@ struct DirEntry {
     last_modified: u64,
 }
 
-const MIME_TYPES: &[(&str, &str)] = &[("md", "application/markdown"), ("wasm", "application/wasm")];
+const MIME_TYPES: &[(&str, &str)] = &[("md", "text/markdown"), ("wasm", "application/wasm")];
 
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/files**", |ctx| {
@@ -63,6 +63,8 @@ pub fn attach(server: &mut Server<App>) {
                         .as_secs(),
                 });
             }
+
+            children.sort_by(|a, b| a.name.cmp(&b.name));
 
             ctx.content(Content::JSON)
                 .header(("X-Response-Type", "DirEntry"))

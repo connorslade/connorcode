@@ -3,8 +3,10 @@
 	import { page } from '$app/stores';
 	import Head from '$lib/components/Head.svelte';
 
-	import { File, Folder } from 'phosphor-svelte';
+	import { Folder } from 'phosphor-svelte';
 	import humanize_duration from 'humanize-duration';
+
+	import { from_ext } from './filetype';
 
 	function humanFileSize(size: number): string {
 		var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
@@ -35,7 +37,10 @@
 
 	{#each data.children as file}
 		<a href={`/files/${file.path}`} class="file">
-			<div class="name"><svelte:component this={file.is_dir ? Folder : File} /> {file.name}</div>
+			<div class="name">
+				<svelte:component this={file.is_dir ? Folder : from_ext(file.name.split('.')[1])} />
+				{file.name}
+			</div>
 			<div class="size">{file.is_dir ? '' : humanFileSize(file.size)}</div>
 			<div class="updated">{humanize_duration(file.last_modified, { largest: 1 })} ago</div>
 		</a>
