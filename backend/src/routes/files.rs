@@ -48,7 +48,11 @@ pub fn attach(server: &mut Server<App>) {
                 let name = file.file_name().to_string_lossy().into_owned();
 
                 children.push(DirEntry {
-                    path: format!("{local_path}/{name}"),
+                    path: if local_path.is_empty() {
+                        name.to_owned()
+                    } else {
+                        format!("{local_path}/{name}")
+                    },
                     name,
                     is_dir: metadata.is_dir(),
                     size: metadata.len(),
@@ -61,6 +65,7 @@ pub fn attach(server: &mut Server<App>) {
             }
 
             ctx.content(Content::JSON)
+                .header(("X-Response-Type", "DirEntry"))
                 .text(json!(DirResponse { children }))
                 .send()?;
         } else {
@@ -74,12 +79,13 @@ pub fn attach(server: &mut Server<App>) {
 
             let file = File::open(path)?;
 
-            ctx.header((
-                HeaderName::ContentType,
-                content.unwrap_or("application/octet-stream"),
-            ))
-            .stream(file)
-            .send()?;
+            ctx.header(("X-Response-Type", "File"))
+                .header((
+                    HeaderName::ContentType,
+                    content.unwrap_or("application/octet-stream"),
+                ))
+                .stream(file)
+                .send()?;
         }
 
         Ok(())

@@ -11,6 +11,12 @@
 		return +(size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 	}
 
+	function parent(path: string): string {
+		let parts = path.split('/');
+		parts.pop();
+		return parts.join('/');
+	}
+
 	export let data: PageData;
 </script>
 
@@ -21,7 +27,13 @@
 {#if 'error' in data}
 	<p>The directory <code>{$page.params.path}</code> was not found.</p>
 {:else}
-	{#each data.files as file}
+	{#if $page.params.path != ''}
+		<a href={`/files/${parent($page.params.path)}`} class="file">
+			<div class="name"><Folder /> ..</div>
+		</a>
+	{/if}
+
+	{#each data.children as file}
 		<a href={`/files/${file.path}`} class="file">
 			<div class="name"><svelte:component this={file.is_dir ? Folder : File} /> {file.name}</div>
 			<div class="size">{file.is_dir ? '' : humanFileSize(file.size)}</div>
