@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Link from '$lib/Link.svelte';
-	import Head from '$lib/Head.svelte';
+	import Link from '$lib/components/Link.svelte';
+	import Head from '$lib/components/Head.svelte';
 	import { SITE_REPO } from '$lib/consts';
 
 	function report_address(title: string, body: string): string {

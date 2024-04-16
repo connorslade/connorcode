@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Link from '$lib/Link.svelte';
+	import Link from '$lib/components/Link.svelte';
 	import { GITHUB, VERSION } from '$lib/consts';
 
 	import '../styles/main.scss';

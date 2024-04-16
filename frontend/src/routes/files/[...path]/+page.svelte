@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { page } from '$app/stores';
-	import Head from '$lib/Head.svelte';
+	import Head from '$lib/components/Head.svelte';
 
 	import { File, Folder } from 'phosphor-svelte';
 	import humanize_duration from 'humanize-duration';

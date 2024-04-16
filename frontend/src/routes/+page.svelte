@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Head from '$lib/Head.svelte';
-	import Link from '$lib/Link.svelte';
+	import Head from '$lib/components/Head.svelte';
+	import Link from '$lib/components/Link.svelte';
 
 	import { VERSION, GITHUB } from '$lib/consts';
 
