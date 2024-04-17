@@ -18,6 +18,6 @@ export const load: PageServerLoad = async ({ params }) => {
 	const req = await fetch(`${path}?no_file=true`);
 	const res_type = req.headers.get('X-Response-Type');
 
-	if (res_type == 'DirEntry') return (await req.json()) as DirResponse;
-	else if (res_type == 'File') throw redirect(307, path);
+	if (res_type == 'File') throw redirect(307, path);
+	else if (res_type == 'DirEntry') return (await req.json()) as DirResponse;
 };

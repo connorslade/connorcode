@@ -3,20 +3,28 @@
 	import { page } from '$app/stores';
 	import Head from '$lib/components/Head.svelte';
 
-	import { Folder } from 'phosphor-svelte';
+	import Folder from 'phosphor-svelte/lib/Folder';
 	import humanize_duration from 'humanize-duration';
 
 	import { from_ext } from './filetype';
 
-	function humanFileSize(size: number): string {
-		var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-		return +(size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+	$: path = $page.params.path;
+	$: parts = path.split('/');
+
+	function human_file_size(size: number): string {
+		const UNITS = ['B', 'kB', 'MB', 'GB', 'TB'];
+
+		let idx = 0;
+		while (size >= 1024 && idx < UNITS.length) {
+			size /= 1024;
+			idx++;
+		}
+
+		return `${size.toFixed(0)} ${UNITS[idx]}`;
 	}
 
-	function parent(path: string): string {
-		let parts = path.split('/');
-		parts.pop();
-		return parts.join('/');
+	function parent(depth: number): string {
+		return parts.slice(0, parts.length - depth).join('/');
 	}
 
 	export let data: PageData;
@@ -26,13 +34,22 @@
 
 <h1>Files</h1>
 
-{#if 'error' in data}
-	<p>The directory <code>{$page.params.path}</code> was not found.</p>
+{#if data.children == undefined}
+	<p>You are being redirected.</p>
+{:else if 'error' in data}
+	<p>The directory <code>{path}</code> was not found.</p>
 {:else}
-	<p>{$page.params.path.replaceAll('/', ' » ')}</p>
+	{#if path != ''}
+		<p>
+			<a href="/files" class="breadcrumb">Files</a>{#each parts as segment, idx}
+				&nbsp;»
+				<a href={`/files/${parent(parts.length - idx - 1)}`} class="breadcrumb">{segment}</a>
+			{/each}
+		</p>
+	{/if}
 
-	{#if $page.params.path != ''}
-		<a href={`/files/${parent($page.params.path)}`} class="file">
+	{#if path != ''}
+		<a href={`/files/${parent(1)}`} class="file">
 			<div class="name"><Folder /> ..</div>
 		</a>
 	{/if}
@@ -43,7 +60,7 @@
 				<svelte:component this={file.is_dir ? Folder : from_ext(file.name.split('.')[1])} />
 				{file.name}
 			</div>
-			<div class="size">{file.is_dir ? '' : humanFileSize(file.size)}</div>
+			<div class="size">{file.is_dir ? '' : human_file_size(file.size)}</div>
 			<div class="updated">{humanize_duration(file.last_modified, { largest: 1 })} ago</div>
 		</a>
 	{/each}
@@ -63,6 +80,26 @@
 		& .name {
 			display: flex;
 			gap: 5px;
+		}
+	}
+
+	.breadcrumb {
+		color: var(--font-color);
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	@media (width <= 510px) {
+		.file {
+			grid-template-columns: auto;
+
+			& .size,
+			& .updated {
+				display: none;
+			}
 		}
 	}
 </style>
