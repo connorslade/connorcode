@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Head from '$lib/components/Head.svelte';
+	import Rule from '$lib/components/Rule.svelte';
 </script>
 
 <Head title="Using libmpv in Rust" description="todo" />
@@ -19,6 +20,12 @@
 	different cuepoints and waiting before continuing past one. Anyway, to support a wide selection of
 	video formats, I decided to use libmpv (<a href="">source</a>).
 </p>
+
+<Rule style="dashed" />
+
+<h2>Comments</h2>
+
+<p>No comments yet... You can be the first!</p>
 
 <style lang="scss">
 	.title {

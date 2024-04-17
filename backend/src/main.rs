@@ -6,17 +6,19 @@ use afire::{
 };
 use anyhow::Result;
 use dotenvy::dotenv_override;
+use tracing::{info, level_filters::LevelFilter};
+use tracing_subscriber::{filter, layer::SubscriberExt, util::SubscriberInitExt};
 
 use app::App;
 use config::Config;
 use logger::{AfireLogger, RequestLogger};
-use tracing::{info, level_filters::LevelFilter};
-use tracing_subscriber::{filter, layer::SubscriberExt, util::SubscriberInitExt};
 mod app;
 mod config;
 mod database;
 mod logger;
 mod routes;
+mod markdown;
+mod writing;
 
 fn main() -> Result<()> {
     trace::set_log_formatter(AfireLogger);
@@ -24,7 +26,7 @@ fn main() -> Result<()> {
     let filter = filter::Targets::new()
         .with_default(LevelFilter::INFO)
         .with_target("afire", LevelFilter::TRACE)
-        .with_target("api", LevelFilter::TRACE);
+        .with_target("backend", LevelFilter::TRACE);
     tracing_subscriber::registry()
         .with(filter)
         .with(tracing_subscriber::fmt::layer())

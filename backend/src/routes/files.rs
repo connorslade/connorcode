@@ -1,6 +1,7 @@
 use std::{
     fs::{self, File},
     path::PathBuf,
+    sync::atomic::AtomicUsize,
     time::UNIX_EPOCH,
 };
 
@@ -10,11 +11,13 @@ use afire::{
     internal::encoding::url,
     Content, HeaderName, Server,
 };
-use pulldown_cmark::{Options, Parser};
+use comrak::{
+    markdown_to_html, markdown_to_html_with_plugins, plugins::syntect::SyntectAdapter, Plugins,
+};
 use serde::Serialize;
 use serde_json::json;
 
-use crate::app::App;
+use crate::{app::App, markdown};
 
 #[derive(Serialize)]
 struct DirResponse {
@@ -34,7 +37,7 @@ struct DirEntry {
 const MIME_TYPES: &[(&str, &str)] = &[("md", "text/markdown"), ("wasm", "application/wasm")];
 
 pub fn attach(server: &mut Server<App>) {
-    server.get("/api/files**", |ctx| {
+    server.get("/api/files**", move |ctx| {
         let base_path = PathBuf::from("files");
         let mut local_path: &str = &safe_path(&ctx.req.path[10..]);
         if local_path.starts_with('/') {
@@ -55,14 +58,7 @@ pub fn attach(server: &mut Server<App>) {
 
                 if name.eq_ignore_ascii_case("readme.md") {
                     let contents = fs::read_to_string(file.path())?;
-
-                    let mut options = Options::empty();
-                    options.insert(Options::ENABLE_STRIKETHROUGH);
-                    let parser = Parser::new_ext(&contents, options);
-
-                    let mut html = String::new();
-                    pulldown_cmark::html::push_html(&mut html, parser);
-                    readme = Some(html);
+                    readme = Some(markdown::render(&contents));
                 }
 
                 children.push(DirEntry {
@@ -82,7 +78,7 @@ pub fn attach(server: &mut Server<App>) {
                 });
             }
 
-            children.sort_by(|a, b| a.name.cmp(&b.name));
+            children.sort_by(|a, b| b.is_dir.cmp(&a.is_dir).then_with(|| a.name.cmp(&b.name)));
 
             ctx.content(Content::JSON)
                 .header(("X-Response-Type", "DirEntry"))
