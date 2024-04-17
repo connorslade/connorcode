@@ -1,3 +1,4 @@
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 type DirResponse = {
@@ -13,7 +14,10 @@ type DirEntry = {
 };
 
 export const load: PageServerLoad = async ({ params }) => {
-	return (await (
-		await fetch(`http://localhost:8080/api/files/${params.path}`)
-	).json()) as DirResponse;
+	const path = `http://localhost:8080/api/files/${params.path}`;
+	const req = await fetch(`${path}?no_file=true`);
+	const res_type = req.headers.get('X-Response-Type');
+
+	if (res_type == 'DirEntry') return (await req.json()) as DirResponse;
+	else if (res_type == 'File') throw redirect(307, path);
 };

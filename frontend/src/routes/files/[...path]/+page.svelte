@@ -29,6 +29,8 @@
 {#if 'error' in data}
 	<p>The directory <code>{$page.params.path}</code> was not found.</p>
 {:else}
+	<p>{$page.params.path.replaceAll('/', ' » ')}</p>
+
 	{#if $page.params.path != ''}
 		<a href={`/files/${parent($page.params.path)}`} class="file">
 			<div class="name"><Folder /> ..</div>

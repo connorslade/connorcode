@@ -41,6 +41,8 @@ pub fn attach(server: &mut Server<App>) {
         let local_path = url::decode(local_path);
         let path = base_path.join(&local_path);
 
+        let no_file = ctx.req.query.has("no_file");
+
         if path.is_dir() {
             let mut children = Vec::new();
             for file in fs::read_dir(path)?.into_iter().filter_map(|x| x.ok()) {
@@ -79,14 +81,16 @@ pub fn attach(server: &mut Server<App>) {
                 })
                 .flatten();
 
-            let file = File::open(path)?;
+            if !no_file {
+                let file = File::open(path)?;
+                ctx.stream(file);
+            }
 
             ctx.header(("X-Response-Type", "File"))
                 .header((
                     HeaderName::ContentType,
                     content.unwrap_or("application/octet-stream"),
                 ))
-                .stream(file)
                 .send()?;
         }
 
