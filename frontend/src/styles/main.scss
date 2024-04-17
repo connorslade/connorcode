@@ -76,3 +76,13 @@ pre {
 		background-color: transparent;
 	}
 }
+
+table {
+	border-collapse: collapse;
+
+	& td,
+	& th {
+		padding: 5px;
+		border: 1px solid color-mix(in srgb, var(--text-color), black 50%);
+	}
+}
