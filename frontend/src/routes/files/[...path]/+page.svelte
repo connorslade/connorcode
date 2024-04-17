@@ -7,21 +7,10 @@
 	import humanize_duration from 'humanize-duration';
 
 	import { from_ext } from './filetype';
+	import { human_file_size } from '$lib/utils';
 
 	$: path = $page.params.path;
 	$: parts = path.split('/');
-
-	function human_file_size(size: number): string {
-		const UNITS = ['B', 'kB', 'MB', 'GB', 'TB'];
-
-		let idx = 0;
-		while (size >= 1024 && idx < UNITS.length) {
-			size /= 1024;
-			idx++;
-		}
-
-		return `${size.toFixed(0)} ${UNITS[idx]}`;
-	}
 
 	function parent(depth: number): string {
 		return parts.slice(0, parts.length - depth).join('/');
@@ -78,8 +67,10 @@
 		}
 
 		& .name {
-			display: flex;
-			gap: 5px;
+			min-width: 0;
+			display: ruby;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 
