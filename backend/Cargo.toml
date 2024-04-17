@@ -13,6 +13,7 @@ comrak = { version = "0.22.0", features = ["emojis", "syntect"] }
 ctrlc = "3.4.2"
 dotenvy = "0.15.7"
 glob = "0.3.1"
+latex2mathml = "0.2.3"
 parking_lot = "0.12.1"
 rusqlite = { version = "0.30.0", features = ["bundled"] }
 serde = { version = "1.0.196", features = ["derive"] }

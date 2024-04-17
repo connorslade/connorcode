@@ -1,9 +1,10 @@
 use comrak::{
-    markdown_to_html_with_plugins, plugins::syntect::SyntectAdapter, ExtensionOptions, Options,
-    ParseOptions, Plugins, RenderOptions,
+    format_html_with_plugins, nodes::NodeValue, parse_document, plugins::syntect::SyntectAdapter,
+    Arena, ExtensionOptions, Options, ParseOptions, Plugins, RenderOptions,
 };
+use latex2mathml::{latex_to_mathml, DisplayStyle};
 
-use std::sync::OnceLock;
+use std::{io::BufWriter, sync::OnceLock};
 
 const CODE_BLOCK_THEME: &str = "base16-eighties.dark";
 
@@ -50,5 +51,34 @@ pub fn default_plugins() -> &'static Plugins<'static> {
 }
 
 pub fn render(markdown: &str) -> String {
-    markdown_to_html_with_plugins(&markdown, default_config(), default_plugins())
+    let options = &default_config();
+    let arena = Arena::new();
+
+    let root = parse_document(&arena, markdown, options);
+
+    let mut children = vec![root];
+    while let Some(child) = children.pop() {
+        children.extend(child.children());
+        let mut node = child.data.borrow_mut();
+        if let NodeValue::Math(math) = &node.value {
+            let mathml = latex_to_mathml(
+                &math.literal,
+                if math.display_math {
+                    DisplayStyle::Block
+                } else {
+                    DisplayStyle::Inline
+                },
+            );
+            match mathml {
+                Ok(mathml) => node.value = NodeValue::HtmlInline(mathml),
+                Err(e) => {
+                    node.value = NodeValue::Text(format!("Error rendering LaTeX to MathML: {e}"))
+                }
+            }
+        }
+    }
+
+    let mut bw = BufWriter::new(Vec::new());
+    format_html_with_plugins(root, options, &mut bw, default_plugins()).unwrap();
+    String::from_utf8(bw.into_inner().unwrap()).unwrap()
 }
