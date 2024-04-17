@@ -3,6 +3,7 @@ import type { PageServerLoad } from './$types';
 
 type DirResponse = {
 	children: [DirEntry];
+	readme: string | null;
 };
 
 type DirEntry = {

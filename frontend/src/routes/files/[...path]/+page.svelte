@@ -8,6 +8,7 @@
 
 	import { from_ext } from './filetype';
 	import { human_file_size } from '$lib/utils';
+	import Rule from '$lib/components/Rule.svelte';
 
 	$: path = $page.params.path;
 	$: parts = path.split('/');
@@ -53,6 +54,12 @@
 			<div class="updated">{humanize_duration(file.last_modified, { largest: 1 })} ago</div>
 		</a>
 	{/each}
+
+	{#if data.readme != null}
+		<br />
+		<Rule style="dashed" />
+		{@html data.readme}
+	{/if}
 {/if}
 
 <style lang="scss">

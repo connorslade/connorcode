@@ -10,6 +10,7 @@ use afire::{
     internal::encoding::url,
     Content, HeaderName, Server,
 };
+use pulldown_cmark::{Options, Parser};
 use serde::Serialize;
 use serde_json::json;
 
@@ -18,6 +19,7 @@ use crate::app::App;
 #[derive(Serialize)]
 struct DirResponse {
     children: Vec<DirEntry>,
+    readme: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -45,9 +47,23 @@ pub fn attach(server: &mut Server<App>) {
 
         if path.is_dir() {
             let mut children = Vec::new();
+            let mut readme = None;
+
             for file in fs::read_dir(path)?.into_iter().filter_map(|x| x.ok()) {
                 let metadata = file.metadata()?;
                 let name = file.file_name().to_string_lossy().into_owned();
+
+                if name.eq_ignore_ascii_case("readme.md") {
+                    let contents = fs::read_to_string(file.path())?;
+
+                    let mut options = Options::empty();
+                    options.insert(Options::ENABLE_STRIKETHROUGH);
+                    let parser = Parser::new_ext(&contents, options);
+
+                    let mut html = String::new();
+                    pulldown_cmark::html::push_html(&mut html, parser);
+                    readme = Some(html);
+                }
 
                 children.push(DirEntry {
                     path: if local_path.is_empty() {
@@ -70,7 +86,7 @@ pub fn attach(server: &mut Server<App>) {
 
             ctx.content(Content::JSON)
                 .header(("X-Response-Type", "DirEntry"))
-                .text(json!(DirResponse { children }))
+                .text(json!(DirResponse { children, readme }))
                 .send()?;
         } else {
             let ext = path.extension().map(|x| x.to_string_lossy());
