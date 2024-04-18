@@ -9,6 +9,7 @@
 	import { from_ext } from './filetype';
 	import { human_file_size } from '$lib/utils';
 	import Rule from '$lib/components/Rule.svelte';
+	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
 
 	$: path = $page.params.path;
 	$: parts = path.split('/');
@@ -58,7 +59,7 @@
 	{#if data.readme != null}
 		<br />
 		<Rule style="dashed" />
-		{@html data.readme}
+		<HtmlRenderer html={data.readme} />
 	{/if}
 {/if}
 
