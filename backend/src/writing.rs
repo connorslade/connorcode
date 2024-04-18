@@ -1,9 +1,5 @@
-use std::{default, fs};
-
 use anyhow::Result;
 use glob::glob;
-
-use crate::markdown;
 
 struct Writing {
     articles: Article,

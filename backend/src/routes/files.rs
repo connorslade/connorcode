@@ -1,7 +1,6 @@
 use std::{
     fs::{self, File},
     path::PathBuf,
-    sync::atomic::AtomicUsize,
     time::UNIX_EPOCH,
 };
 
@@ -10,9 +9,6 @@ use afire::{
     extensions::{serve_static::safe_path, RouteShorthands},
     internal::encoding::url,
     Content, HeaderName, Server,
-};
-use comrak::{
-    markdown_to_html, markdown_to_html_with_plugins, plugins::syntect::SyntectAdapter, Plugins,
 };
 use serde::Serialize;
 use serde_json::json;
@@ -52,7 +48,7 @@ pub fn attach(server: &mut Server<App>) {
             let mut children = Vec::new();
             let mut readme = None;
 
-            for file in fs::read_dir(path)?.into_iter().filter_map(|x| x.ok()) {
+            for file in fs::read_dir(path)?.filter_map(|x| x.ok()) {
                 let metadata = file.metadata()?;
                 let name = file.file_name().to_string_lossy().into_owned();
 
@@ -86,12 +82,10 @@ pub fn attach(server: &mut Server<App>) {
                 .send()?;
         } else {
             let ext = path.extension().map(|x| x.to_string_lossy());
-            let content = ext
-                .map(|ext| {
-                    get_type(&ext, &TYPES)
-                        .or_else(|| MIME_TYPES.iter().find(|x| x.0 == ext).map(|x| x.1))
-                })
-                .flatten();
+            let content = ext.and_then(|ext| {
+                get_type(&ext, &TYPES)
+                    .or_else(|| MIME_TYPES.iter().find(|x| x.0 == ext).map(|x| x.1))
+            });
 
             if !no_file {
                 let file = File::open(path)?;

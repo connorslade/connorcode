@@ -24,7 +24,6 @@
 
 	export let title: string;
 	export let type: string;
-	export let content: string | null = null;
 
 	let style = STYLES[type];
 </script>
@@ -40,7 +39,6 @@
 	</p>
 
 	<slot />
-	{@html content}
 </div>
 
 <style lang="scss">
