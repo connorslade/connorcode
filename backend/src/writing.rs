@@ -1,8 +1,9 @@
 use std::{fs, path::PathBuf};
 
 use anyhow::Result;
+use chrono::NaiveDate;
 use glob::glob;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use tracing::{info, warn};
 
 use crate::markdown;
@@ -11,16 +12,41 @@ pub struct Writing {
     pub articles: Vec<Article>,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct Article {
-    pub date: String,
-    pub title: String,
-    pub description: String,
-    pub tags: Vec<String>,
+#[derive(Deserialize, Serialize)]
+pub struct FrontMatter {
     pub path: String,
 
-    #[serde(skip)]
+    pub title: String,
+    pub description: String,
+
+    #[serde(
+        deserialize_with = "parse_naive_date",
+        serialize_with = "stringify_naive_date"
+    )]
+    pub date: NaiveDate,
+    pub tags: Vec<String>,
+}
+
+pub struct Article {
+    pub front_matter: FrontMatter,
     pub filesystem_path: PathBuf,
+    pub word_count: u32,
+}
+
+#[derive(Serialize)]
+pub struct ArticleApiResponse<'a> {
+    #[serde(flatten)]
+    pub front_matter: &'a FrontMatter,
+    pub word_count: u32,
+}
+
+impl Article {
+    pub fn into_api_response(&self) -> ArticleApiResponse {
+        ArticleApiResponse {
+            front_matter: &self.front_matter,
+            word_count: self.word_count,
+        }
+    }
 }
 
 pub fn load() -> Result<Writing> {
@@ -49,7 +75,7 @@ pub fn load() -> Result<Writing> {
             continue;
         };
         let mut front_matter =
-            match serde_yaml::from_str::<Article>(&front_matter[4..front_matter.len() - 6]) {
+            match serde_yaml::from_str::<FrontMatter>(&front_matter[4..front_matter.len() - 6]) {
                 Ok(e) => e,
                 Err(e) => {
                     warn!(
@@ -59,14 +85,34 @@ pub fn load() -> Result<Writing> {
                     continue;
                 }
             };
-        front_matter.filesystem_path = relative_path.to_path_buf();
+
+        let article = Article {
+            front_matter,
+            filesystem_path: relative_path.to_path_buf(),
+            word_count: rendered.word_count,
+        };
 
         let new_path = cache_path.join(relative_path).with_extension("html");
         fs::create_dir_all(new_path.parent().unwrap())?;
         fs::write(new_path, rendered.html)?;
 
-        articles.push(front_matter);
+        articles.push(article);
     }
 
     Ok(Writing { articles })
+}
+
+fn parse_naive_date<'de, D>(from: D) -> Result<NaiveDate, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let str = String::deserialize(from)?;
+    Ok(NaiveDate::parse_from_str(&str, "%m-%d-%y").unwrap_or_default())
+}
+
+fn stringify_naive_date<S>(date: &NaiveDate, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_str(&date.format("%m/%d/%Y").to_string())
 }

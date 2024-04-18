@@ -9,7 +9,7 @@ pub fn attach(server: &mut Server<App>) {
         let mut out = Vec::new();
 
         for article in articles {
-            out.push(json!(article));
+            out.push(json!(article.into_api_response()));
         }
 
         ctx.content(Content::JSON).text(json!(out)).send()?;

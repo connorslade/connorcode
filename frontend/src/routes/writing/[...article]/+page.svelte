@@ -23,17 +23,18 @@
 
 	export let data: PageData;
 
-	$: reading_time = (data.word_count / 3.5 / 60).toFixed(0);
+	$: reading_time = (data.info.word_count / 3.5 / 60).toFixed(0);
 </script>
 
-<Head title="Using libmpv in Rust" description="todo" />
+<Head title={data.info.title} description={data.info.description} />
 
 <Breadcrumbs crumbs={crumbs(data.info.path)} links={crumb_links(data.info.path)} />
 
 <h1 class="title">{data.info.title}</h1>
 
 <span class="date"
-	>published 07/09/2023 &bull; {data.word_count} words &bull; {reading_time}m reading time</span
+	>published {data.info.date} &bull; {data.info.word_count} words &bull; {reading_time}m reading
+	time</span
 >
 
 <HtmlRenderer html={data.html} />

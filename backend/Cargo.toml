@@ -9,6 +9,7 @@ afire = { version = "3.0.0-alpha.3", features = [
     "tracing",
 ], default-features = false }
 anyhow = "1.0.79"
+chrono = "0.4.38"
 comrak = { version = "0.22.0", features = ["emojis", "syntect"] }
 ctrlc = "3.4.2"
 dotenvy = "0.15.7"

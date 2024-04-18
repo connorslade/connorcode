@@ -14,6 +14,7 @@ use std::{cell::RefCell, collections::VecDeque, io::BufWriter, sync::OnceLock};
 pub struct RenderedMarkdown {
     pub html: String,
     pub front_matter: Option<String>,
+    pub word_count: u32,
 }
 
 pub fn default_config() -> &'static Options {
@@ -75,11 +76,33 @@ pub fn render(markdown: &str) -> RenderedMarkdown {
 
     let root = parse_document(&arena, markdown, options);
     let mut front_matter = None;
+    let mut word_count = 0;
+
+    let mut count_words = |text: &str| {
+        if !text.is_empty() {
+            word_count += 1;
+        }
+
+        let mut last_whitespace = true;
+        for char in text.chars() {
+            let is_whitespace = char.is_whitespace();
+            word_count += (is_whitespace && !last_whitespace) as u8 as u32;
+            last_whitespace = is_whitespace;
+        }
+    };
 
     let mut children = VecDeque::from_iter([root]);
     while let Some(child) = children.pop_front() {
         children.extend(child.children());
         let mut node = child.data.borrow_mut();
+
+        match &node.value {
+            NodeValue::Text(text) => count_words(text),
+            NodeValue::Code(code) => count_words(&code.literal),
+            NodeValue::Link(link) => count_words(&link.title),
+            _ => {}
+        }
+
         match &node.value {
             NodeValue::FrontMatter(matter) => front_matter = Some(matter.to_owned()),
             NodeValue::Math(math) => {
@@ -131,5 +154,9 @@ pub fn render(markdown: &str) -> RenderedMarkdown {
     format_html_with_plugins(root, options, &mut buf, default_plugins()).unwrap();
     let html = String::from_utf8(buf.into_inner().unwrap()).unwrap();
 
-    RenderedMarkdown { html, front_matter }
+    RenderedMarkdown {
+        html,
+        front_matter,
+        word_count,
+    }
 }

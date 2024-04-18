@@ -36,7 +36,6 @@
 	"type": "module",
 	"dependencies": {
 		"html-svelte-parser": "^1.0.0",
-		"html-to-text": "^9.0.5",
 		"humanize-duration": "^3.32.0"
 	}
 }

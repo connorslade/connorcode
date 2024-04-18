@@ -27,11 +27,16 @@ pub fn attach(server: &mut Server<App>) {
         let article_path = &ctx.req.path[26..];
         let article = lookup_article(&app, article_path).context("Article not found")?;
 
-        ctx.content(Content::JSON).text(json!(article)).send()?;
+        ctx.content(Content::JSON)
+            .text(json!(article.into_api_response()))
+            .send()?;
         Ok(())
     });
 }
 
 fn lookup_article<'a>(app: &'a Arc<App>, path: &str) -> Option<&'a Article> {
-    app.writing.articles.iter().find(|x| x.path == path)
+    app.writing
+        .articles
+        .iter()
+        .find(|x| x.front_matter.path == path)
 }
