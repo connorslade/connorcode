@@ -4,13 +4,17 @@
 	import Head from '$lib/components/Head.svelte';
 	import Rule from '$lib/components/Rule.svelte';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
+	import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
 
 	export let data: PageData;
 </script>
 
 <Head title="Using libmpv in Rust" description="todo" />
 
-<!-- <p>article: {$page.params.article}</p> -->
+<Breadcrumbs
+	crumbs={['writing', 'minecraft', 'fast-doll']}
+	links={['/writing', '/writing/minecraft', '/writing/minecraft/fast-doll']}
+/>
 
 <h1 class="title">Fast Doll</h1>
 

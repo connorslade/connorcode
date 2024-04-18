@@ -31,6 +31,7 @@
 	<p>The directory <code>{path}</code> was not found.</p>
 {:else}
 	{#if path != ''}
+		<!--TODO: Use breadcrumbs component-->
 		<p>
 			<a href="/files" class="breadcrumb">Files</a>{#each parts as segment, idx}
 				&nbsp;»
