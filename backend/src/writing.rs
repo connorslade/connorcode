@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf};
+use std::{cmp::Reverse, fs, path::PathBuf};
 
 use anyhow::Result;
 use chrono::NaiveDate;
@@ -74,7 +74,7 @@ pub fn load() -> Result<Writing> {
             );
             continue;
         };
-        let mut front_matter =
+        let front_matter =
             match serde_yaml::from_str::<FrontMatter>(&front_matter[4..front_matter.len() - 6]) {
                 Ok(e) => e,
                 Err(e) => {
@@ -98,6 +98,8 @@ pub fn load() -> Result<Writing> {
 
         articles.push(article);
     }
+
+    articles.sort_by_key(|x| Reverse(x.front_matter.date));
 
     Ok(Writing { articles })
 }

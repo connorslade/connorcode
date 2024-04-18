@@ -1,25 +1,19 @@
 import type { PageServerLoad } from './$types';
+import type { ArticleInfo } from '$lib/types';
 
-type Info = {
-	date: string;
-	description: string;
-	path: string;
-	tags: string[];
-	title: string;
-	word_count: number;
-};
+import { API_SERVER_ADDRESS } from '$env/static/private';
 
 type Response = {
 	html: string;
-	info: Info;
+	info: ArticleInfo;
 };
 
 export const load: PageServerLoad = async ({ params }): Promise<Response> => {
 	const html = await (
-		await fetch(`http://localhost:8080/api/writing/article/${params.article}`)
+		await fetch(`${API_SERVER_ADDRESS}/api/writing/article/${params.article}`)
 	).text();
-	const info: Info = await (
-		await fetch(`http://localhost:8080/api/writing/article/info/${params.article}`)
+	const info: ArticleInfo = await (
+		await fetch(`${API_SERVER_ADDRESS}/api/writing/article/info/${params.article}`)
 	).json();
 
 	return { info, html };

@@ -1,5 +1,39 @@
 <script lang="ts">
+	import type { PageData } from './$types';
+
 	import Head from '$lib/components/Head.svelte';
+
+	class NaiveDate {
+		month: number;
+		day: number;
+		year: number;
+
+		constructor(date: string) {
+			let parts = date.split('/');
+			this.month = parseInt(parts[0]);
+			this.day = parseInt(parts[1]);
+			this.year = parseInt(parts[2]);
+		}
+	}
+
+	const MONTHS: string[] = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	];
+
+	export let data: PageData;
+
+	$: dates = data.articles.map((article) => new NaiveDate(article.date));
 </script>
 
 <Head title="Writing" description="todo" />
@@ -11,39 +45,23 @@
 	you can subscribe to the <a href="/">RSS feed</a>.
 </p>
 
-<h2>2023</h2>
-<h3>September</h3>
-<ul>
-	<li>
-		<a href="/writing/minecraft/list-of-minecraft-enchantments">List of Minecraft Enchantments</a> &mdash;
-		Downloadable and interactive list of all minecraft enchantments
-	</li>
-</ul>
+{#each data.articles as article, idx}
+	{#if idx == 0 || dates[idx].year != dates[idx - 1].year}
+		<h2>{dates[idx].year}</h2>
+	{/if}
 
-<h3>August</h3>
-<ul>
-	<li>
-		<a href="/writing/afire/update-8">afire Update (V2.2.1)</a> &mdash; Updates to afire in V2.2.1
-	</li>
-</ul>
+	{#if idx == 0 || dates[idx].month != dates[idx - 1].month}
+		<h3>{MONTHS[dates[idx].month - 1]}</h3>
+	{/if}
 
-<h3>July</h3>
-<ul>
 	<li>
-		<a href="/writing/tutorial/using-libmpv-in-rust">Using libmpv in Rust</a> &mdash; Compiling and linking
-		with libmpv-rs in rust
+		<a href={`/writing/${article.path}`}>{article.title}</a>
+		&mdash; {article.description}
 	</li>
-</ul>
+{/each}
 
 <style lang="scss">
-	.article {
-		background: rgb(19, 19, 19);
-		padding: 10px;
-		border-radius: 5px;
-
-		& .title-line {
-			display: flex;
-			justify-content: space-between;
-		}
+	li {
+		margin-left: 40px;
 	}
 </style>

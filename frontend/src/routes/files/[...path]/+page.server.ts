@@ -1,6 +1,8 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
+import { API_SERVER_ADDRESS } from '$env/static/private';
+
 type DirResponse = {
 	children: [DirEntry];
 	readme: string | null;
@@ -15,7 +17,7 @@ type DirEntry = {
 };
 
 export const load: PageServerLoad = async ({ params }) => {
-	const path = `http://localhost:8080/api/files/${params.path}`;
+	const path = `${API_SERVER_ADDRESS}/api/files/${params.path}`;
 	const req = await fetch(`${path}?no_file=true`);
 	const res_type = req.headers.get('X-Response-Type');
 
