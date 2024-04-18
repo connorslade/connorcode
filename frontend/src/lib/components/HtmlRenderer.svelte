@@ -1,48 +1,26 @@
 <script lang="ts">
-	import { SvelteComponent, onMount } from 'svelte';
+	import { Html, isTag, Element } from 'html-svelte-parser';
+
 	import Admonition from './Admonition.svelte';
 
-	function init() {
-		let to_destroy: SvelteComponent[] = [];
-
-		let blockquotes = document.querySelectorAll('blockquote');
-		for (let blockquote of blockquotes) {
-			let match = blockquote.childNodes[1].textContent?.match(/\[(.*)\] (.*)/);
-			if (match == null || match == undefined) continue;
-
-			let type = match[1];
-			let title = match[2];
-
-			let content = '';
-			for (let i = 2; i < blockquote.childNodes.length; i++) {
-				let value = blockquote.childNodes[i] as HTMLQuoteElement;
-				if (value.outerHTML == undefined) continue;
-				content += value.outerHTML;
-			}
-
-			let container = document.createElement('div');
-			blockquote.replaceWith(container);
-			let admonition = new Admonition({
-				target: container,
+	function process_node(node: Element): any {
+		if (node.name == 'div' && node.attribs['element'] == 'admonition') {
+			return {
+				component: Admonition,
 				props: {
-					title,
-					type,
-					content
+					type: node.attribs['type'],
+					title: node.attribs['title']
 				}
-			});
-
-			to_destroy.push(admonition);
+			};
 		}
-
-		return () => {
-			for (let component of to_destroy) component.$destroy();
-		};
 	}
-
-	onMount(init);
 
 	export let html: string;
 </script>
 
-<!-- {@html html} -->
-{@html `<Admonition type="tip" title="It works?">Hello</Admonition>`}
+<Html
+	{html}
+	processNode={(node) => {
+		if (isTag(node)) return process_node(node);
+	}}
+/>

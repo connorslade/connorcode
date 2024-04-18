@@ -14,10 +14,12 @@ use config::Config;
 use logger::{AfireLogger, RequestLogger};
 mod app;
 mod config;
+#[macro_use]
+mod util;
 mod database;
 mod logger;
-mod routes;
 mod markdown;
+mod routes;
 mod writing;
 
 fn main() -> Result<()> {

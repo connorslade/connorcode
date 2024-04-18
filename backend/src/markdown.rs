@@ -1,10 +1,14 @@
 use comrak::{
-    format_html_with_plugins, nodes::NodeValue, parse_document, plugins::syntect::SyntectAdapter,
+    arena_tree::Node,
+    format_html_with_plugins,
+    nodes::{Ast, NodeValue},
+    parse_document,
+    plugins::syntect::SyntectAdapter,
     Arena, ExtensionOptions, Options, ParseOptions, Plugins, RenderOptions,
 };
 use latex2mathml::{latex_to_mathml, DisplayStyle};
 
-use std::{io::BufWriter, sync::OnceLock};
+use std::{cell::RefCell, collections::VecDeque, io::BufWriter, sync::OnceLock};
 
 const CODE_BLOCK_THEME: &str = "base16-eighties.dark";
 
@@ -56,29 +60,57 @@ pub fn render(markdown: &str) -> String {
 
     let root = parse_document(&arena, markdown, options);
 
-    let mut children = vec![root];
-    while let Some(child) = children.pop() {
+    let mut children = VecDeque::from_iter([root]);
+    while let Some(child) = children.pop_front() {
         children.extend(child.children());
         let mut node = child.data.borrow_mut();
-        if let NodeValue::Math(math) = &node.value {
-            let mathml = latex_to_mathml(
-                &math.literal,
-                if math.display_math {
-                    DisplayStyle::Block
-                } else {
-                    DisplayStyle::Inline
-                },
-            );
-            match mathml {
-                Ok(mathml) => node.value = NodeValue::HtmlInline(mathml),
-                Err(e) => {
-                    node.value = NodeValue::Text(format!("Error rendering LaTeX to MathML: {e}"))
+        match &node.value {
+            NodeValue::Math(math) => {
+                let mathml = latex_to_mathml(
+                    &math.literal,
+                    if math.display_math {
+                        DisplayStyle::Block
+                    } else {
+                        DisplayStyle::Inline
+                    },
+                );
+                match mathml {
+                    Ok(mathml) => node.value = NodeValue::HtmlInline(mathml),
+                    Err(e) => {
+                        node.value =
+                            NodeValue::Text(format!("Error rendering LaTeX to MathML: {e}"))
+                    }
                 }
             }
+            NodeValue::BlockQuote => {
+                let mut children = VecDeque::from_iter(child.children());
+                while let Some(this_child) = children.pop_front() {
+                    children.extend(this_child.children());
+                    let this_node = this_child.data.borrow();
+                    if let NodeValue::Text(text) = &this_node.value {
+                        let Some(captures) = regex!(r"\[(.*)\] (.*)").captures(text) else {
+                            break;
+                        };
+
+                        this_child.detach();
+                        node.value = NodeValue::HtmlInline(format!(
+                            r#"<div element="admonition" type="{}" title="{}">"#,
+                            &captures[1], &captures[2]
+                        ));
+
+                        let ast =
+                            Ast::new(NodeValue::HtmlInline("</div>".to_owned()), (0, 0).into());
+                        let node = Node::new(RefCell::new(ast));
+                        child.append(arena.alloc(node));
+                        break;
+                    }
+                }
+            }
+            _ => {}
         }
     }
 
-    let mut bw = BufWriter::new(Vec::new());
-    format_html_with_plugins(root, options, &mut bw, default_plugins()).unwrap();
-    String::from_utf8(bw.into_inner().unwrap()).unwrap()
+    let mut buf = BufWriter::new(Vec::new());
+    format_html_with_plugins(root, options, &mut buf, default_plugins()).unwrap();
+    String::from_utf8(buf.into_inner().unwrap()).unwrap()
 }

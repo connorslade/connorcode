@@ -35,6 +35,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"html-svelte-parser": "^1.0.0",
 		"humanize-duration": "^3.32.0"
 	}
 }

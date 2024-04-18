@@ -1,8 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const csr = false;
-
 type DirResponse = {
 	children: [DirEntry];
 	readme: string | null;
