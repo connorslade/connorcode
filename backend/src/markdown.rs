@@ -3,14 +3,13 @@ use comrak::{
     format_html_with_plugins,
     nodes::{Ast, NodeValue},
     parse_document,
-    plugins::syntect::SyntectAdapter,
+    plugins::syntect::SyntectAdapterBuilder,
     Arena, ExtensionOptions, Options, ParseOptions, Plugins, RenderOptions,
 };
 use latex2mathml::{latex_to_mathml, DisplayStyle};
+use syntect::highlighting::ThemeSet;
 
 use std::{cell::RefCell, collections::VecDeque, io::BufWriter, sync::OnceLock};
-
-const CODE_BLOCK_THEME: &str = "base16-eighties.dark";
 
 pub struct RenderedMarkdown {
     pub html: String,
@@ -53,7 +52,18 @@ pub fn default_plugins() -> &'static Plugins<'static> {
 
     CELL.get_or_init(|| {
         let mut plugins = Plugins::default();
-        let syntect = Box::new(SyntectAdapter::new(Some(CODE_BLOCK_THEME)));
+
+        let mut theme_set = ThemeSet::new();
+        let theme = ThemeSet::get_theme("assets/OneDark.tmTheme").unwrap();
+        theme_set.themes.insert("Atom One Dark".to_owned(), theme);
+
+        let syntect = Box::new(
+            SyntectAdapterBuilder::new()
+                .theme_set(theme_set)
+                .theme("Atom One Dark")
+                .build(),
+        );
+
         plugins.render.codefence_syntax_highlighter = Some(Box::leak(syntect));
         plugins
     })

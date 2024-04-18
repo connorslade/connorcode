@@ -34,13 +34,12 @@ const MIME_TYPES: &[(&str, &str)] = &[("md", "text/markdown"), ("wasm", "applica
 
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/files**", move |ctx| {
-        let base_path = PathBuf::from("files");
         let mut local_path: &str = &safe_path(&ctx.req.path[10..]);
         if local_path.starts_with('/') {
             local_path = &local_path[1..];
         }
         let local_path = url::decode(local_path);
-        let path = base_path.join(&local_path);
+        let path = ctx.app().config.files_path.join(&local_path);
 
         let no_file = ctx.req.query.has("no_file");
 

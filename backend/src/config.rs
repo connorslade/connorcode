@@ -7,6 +7,9 @@ pub struct Config {
     pub port: u16,
     pub threads: usize,
     pub database: PathBuf,
+
+    pub files_path: PathBuf,
+    pub writing_path: PathBuf,
 }
 
 impl Config {
@@ -16,6 +19,9 @@ impl Config {
             port: env::var("PORT")?.parse()?,
             threads: env::var("THREADS")?.parse()?,
             database: env::var("DATABASE")?.into(),
+
+            files_path: env::var("FILES_PATH")?.into(),
+            writing_path: env::var("WRITING_PATH")?.into(),
         })
     }
 }

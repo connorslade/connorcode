@@ -18,6 +18,9 @@ pub struct Article {
     pub description: String,
     pub tags: Vec<String>,
     pub path: String,
+
+    #[serde(skip)]
+    pub filesystem_path: PathBuf,
 }
 
 pub fn load() -> Result<Writing> {
@@ -30,6 +33,7 @@ pub fn load() -> Result<Writing> {
     fs::create_dir(".writing_cache")?;
 
     let mut articles = Vec::new();
+    // TODO: use env writing path, maybe dont use glob?
     for path in glob("writing/**/*.md")? {
         let path = path?;
         let relative_path = path.strip_prefix("writing/")?;
@@ -44,7 +48,7 @@ pub fn load() -> Result<Writing> {
             );
             continue;
         };
-        let front_matter =
+        let mut front_matter =
             match serde_yaml::from_str::<Article>(&front_matter[4..front_matter.len() - 6]) {
                 Ok(e) => e,
                 Err(e) => {
@@ -55,6 +59,7 @@ pub fn load() -> Result<Writing> {
                     continue;
                 }
             };
+        front_matter.filesystem_path = relative_path.to_path_buf();
 
         let new_path = cache_path.join(relative_path).with_extension("html");
         fs::create_dir_all(new_path.parent().unwrap())?;
