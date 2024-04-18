@@ -12,6 +12,11 @@ use std::{cell::RefCell, collections::VecDeque, io::BufWriter, sync::OnceLock};
 
 const CODE_BLOCK_THEME: &str = "base16-eighties.dark";
 
+pub struct RenderedMarkdown {
+    pub html: String,
+    pub front_matter: Option<String>,
+}
+
 pub fn default_config() -> &'static Options {
     static CELL: OnceLock<Options> = OnceLock::new();
 
@@ -54,17 +59,19 @@ pub fn default_plugins() -> &'static Plugins<'static> {
     })
 }
 
-pub fn render(markdown: &str) -> String {
+pub fn render(markdown: &str) -> RenderedMarkdown {
     let options = &default_config();
     let arena = Arena::new();
 
     let root = parse_document(&arena, markdown, options);
+    let mut front_matter = None;
 
     let mut children = VecDeque::from_iter([root]);
     while let Some(child) = children.pop_front() {
         children.extend(child.children());
         let mut node = child.data.borrow_mut();
         match &node.value {
+            NodeValue::FrontMatter(matter) => front_matter = Some(matter.to_owned()),
             NodeValue::Math(math) => {
                 let mathml = latex_to_mathml(
                     &math.literal,
@@ -112,5 +119,7 @@ pub fn render(markdown: &str) -> String {
 
     let mut buf = BufWriter::new(Vec::new());
     format_html_with_plugins(root, options, &mut buf, default_plugins()).unwrap();
-    String::from_utf8(buf.into_inner().unwrap()).unwrap()
+    let html = String::from_utf8(buf.into_inner().unwrap()).unwrap();
+
+    RenderedMarkdown { html, front_matter }
 }

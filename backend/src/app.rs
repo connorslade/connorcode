@@ -1,10 +1,16 @@
 use anyhow::Result;
 
-use crate::{config::Config, database::Db};
+use crate::{
+    config::Config,
+    database::Db,
+    writing::{self, Writing},
+};
 
 pub struct App {
     pub database: Db,
     pub config: Config,
+
+    pub writing: Writing,
 }
 
 impl App {
@@ -13,6 +19,10 @@ impl App {
         let database = Db::new(connection);
         database.init()?;
 
-        Ok(Self { database, config })
+        Ok(Self {
+            database,
+            config,
+            writing: writing::load()?,
+        })
     }
 }

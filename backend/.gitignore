@@ -2,5 +2,6 @@
 target
 data.db*
 
-writing
-files
+/writing
+/.writing_cache
+/files

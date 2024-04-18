@@ -54,7 +54,7 @@ pub fn attach(server: &mut Server<App>) {
 
                 if name.eq_ignore_ascii_case("readme.md") {
                     let contents = fs::read_to_string(file.path())?;
-                    readme = Some(markdown::render(&contents));
+                    readme = Some(markdown::render(&contents).html);
                 }
 
                 children.push(DirEntry {
