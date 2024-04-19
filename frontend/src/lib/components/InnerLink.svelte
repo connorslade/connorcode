@@ -5,7 +5,10 @@
 		let target = event.target as HTMLAnchorElement;
 		let anchorId = new URL(target.href).hash.slice(1);
 		let anchor = document.getElementById(anchorId);
-		if (anchor) anchor.scrollIntoView({ behavior: 'smooth' });
+		if (anchor) {
+			anchor.scrollIntoView({ behavior: 'smooth' });
+			history.pushState({}, '', href);
+		}
 	}
 
 	export let href: string;
