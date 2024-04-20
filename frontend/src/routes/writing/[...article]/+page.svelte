@@ -5,6 +5,7 @@
 	import Rule from '$lib/components/Rule.svelte';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
 	import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
+	import Title from '$lib/components/Title.svelte';
 
 	function crumbs(path: string): string[] {
 		let parts = path.split('/');
@@ -30,12 +31,10 @@
 
 <Breadcrumbs crumbs={crumbs(data.info.path)} links={crumb_links(data.info.path)} />
 
-<h1 class="title">{data.info.title}</h1>
-
-<span class="date"
-	>published {data.info.date} &bull; {data.info.word_count} words &bull; {reading_time}m reading
-	time</span
->
+<Title
+	title={data.info.title}
+	info={`published ${data.info.date} &bull; ${data.info.word_count} words &bull; ${reading_time}m reading time`}
+/>
 
 <HtmlRenderer html={data.html} />
 
@@ -44,14 +43,3 @@
 <h2>Comments</h2>
 
 <p>No comments yet... You can be the first!</p>
-
-<style lang="scss">
-	.title {
-		margin-bottom: 0.2em;
-	}
-
-	.date {
-		margin-top: 0;
-		font-size: 0.8em;
-	}
-</style>

@@ -2,6 +2,7 @@
 	import { GITHUB } from '$lib/consts';
 	import Link from '$lib/components/Link.svelte';
 	import Rule from '$lib/components/Rule.svelte';
+	import Title from '$lib/components/Title.svelte';
 
 	import GithubLogo from 'phosphor-svelte/lib/GithubLogo';
 	import LinkIcon from 'phosphor-svelte/lib/Link';
@@ -53,8 +54,12 @@
 	<div class="project">
 		<div class="title-container">
 			<div class="left">
-				<h3 class="title">{project.name}</h3>
-				<span class="date">Created {project.date}</span>
+				<Title
+					title_element="h3"
+					title={project.name}
+					info={`Created ${project.date}`}
+					title_style="margin-top: 0"
+				/>
 			</div>
 
 			<div class="right">
@@ -81,17 +86,5 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-top: 18.72px;
-
-		& .left {
-			& .title {
-				margin-bottom: 0.2em;
-				margin-top: 0;
-			}
-
-			& .date {
-				margin-top: 0;
-				font-size: 0.8em;
-			}
-		}
 	}
 </style>

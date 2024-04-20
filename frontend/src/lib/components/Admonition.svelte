@@ -13,6 +13,7 @@
 		}
 	}
 
+	// From: https://sveltepress.site/guide/default-theme/admonitions/
 	const STYLES: { [key: string]: Style } = {
 		tip: new Style('#2ecc71', 'rgb(46 204 113 / 10%)', Lightbulb),
 		info: new Style('#7633db', 'rgb(118 51 219 / 10%)', Info),

@@ -1,9 +1,11 @@
 <script lang="ts">
+	export let style: string = '';
+
 	export let crumbs: string[];
 	export let links: string[];
 </script>
 
-<p>
+<p {style}>
 	{#each crumbs as crumb, idx}
 		{#if idx != 0}
 			&nbsp;»
