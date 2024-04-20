@@ -1,3 +1,5 @@
+use std::{cell::RefCell, collections::VecDeque, io::BufWriter, sync::OnceLock};
+
 use comrak::{
     arena_tree::Node,
     format_html_with_plugins,
@@ -9,7 +11,7 @@ use comrak::{
 use latex2mathml::{latex_to_mathml, DisplayStyle};
 use syntect::highlighting::ThemeSet;
 
-use std::{cell::RefCell, collections::VecDeque, io::BufWriter, sync::OnceLock};
+use crate::regex;
 
 pub struct RenderedMarkdown {
     pub html: String,

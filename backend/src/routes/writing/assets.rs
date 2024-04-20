@@ -2,7 +2,7 @@ use std::fs::File;
 
 use afire::{extensions::RouteShorthands, HeaderName, Server};
 
-use crate::{app::App, mime::get_content_type};
+use crate::{app::App, misc::mime::get_content_type};
 
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/writing/assets/**", |ctx| {

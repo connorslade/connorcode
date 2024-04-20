@@ -14,12 +14,11 @@ use config::Config;
 use logger::{AfireLogger, RequestLogger};
 mod app;
 mod config;
-#[macro_use]
-mod util;
+
 mod database;
 mod logger;
 mod markdown;
-mod mime;
+mod misc;
 mod routes;
 mod writing;
 

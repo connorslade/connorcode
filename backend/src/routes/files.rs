@@ -11,7 +11,7 @@ use afire::{
 use serde::Serialize;
 use serde_json::json;
 
-use crate::{app::App, markdown, mime::get_content_type};
+use crate::{app::App, markdown, misc::mime::get_content_type};
 
 #[derive(Serialize)]
 struct DirResponse {
