@@ -1,0 +1,22 @@
+@font-face {
+	font-family: 'JetBrainsMono';
+	src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+}
+$jetbrains-mono: 'JetBrainsMono', monospace;
+
+@font-face {
+	font-family: 'DejaVuSans';
+	src: url('/fonts/DejaVuSans.ttf');
+}
+@font-face {
+	font-family: 'DejaVuSans';
+	src: url('/fonts/DejaVuSans-Bold.ttf');
+	font-weight: bold;
+}
+$deja-vu-sans: 'DejaVuSans', sans-serif;
+
+@font-face {
+	font-family: "LatinModern Math";
+	src: url('/fonts/latinmodern-math.otf');
+}
+$latin-modern-math: "LatinModern Math";

@@ -3,6 +3,10 @@
 	import { GITHUB, VERSION } from '$lib/consts';
 
 	import '../styles/main.scss';
+
+	function current_year(): number {
+		return new Date().getFullYear();
+	}
 </script>
 
 <div class="root">
@@ -29,7 +33,7 @@
 	<hr class="footer-rule" />
 
 	<div class="footer">
-		&copy; Connor Slade 2024 &bull; v{VERSION}
+		&copy; Connor Slade {current_year()} &bull; v{VERSION}
 		&bull;
 		<Link href={GITHUB}>Github</Link>
 	</div>

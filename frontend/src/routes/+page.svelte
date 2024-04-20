@@ -20,14 +20,14 @@
 <p>
 	{get_greeting()} 👋, I'm Connor Slade. Welcome to my little place on the internet,
 	<Link href="https://connorcode.com">connorcode.com</Link> <em>version {VERSION}</em>! (Finally
-	rewritten in Svelte).
+	rewritten in Svelte)
 </p>
 
 <p>
-	I'm interested in
+	I'm interested in <Link href={GITHUB}>Software development</Link>,
 	<Link href="https://photos.connorcode.com">Photography</Link>,
-	<Link href="https://www.minecraft.net">Minecraft</Link>,
-	<Link href={GITHUB}>Software development</Link> and some Web development.
+	<Link href="https://www.minecraft.net">Minecraft</Link>, and some Web development (as you can
+	see).
 </p>
 
 <p>

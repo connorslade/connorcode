@@ -14,6 +14,7 @@
 		github: string | null;
 	};
 
+	// TODO: Use consistant date format in projects and writing
 	let projects: Project[] = [
 		{
 			name: 'ridgehacks2024',
@@ -57,14 +58,14 @@
 			</div>
 
 			<div class="right">
-				{#if project.github != null}
-					<Link href={project.github}>
-						<GithubLogo size={24} color="var(--text-color)" class="icon" />
-					</Link>
-				{/if}
 				{#if project.link != null}
 					<Link href={project.link}>
 						<LinkIcon size={24} color="var(--text-color)" class="icon" />
+					</Link>
+				{/if}
+				{#if project.github != null}
+					<Link href={project.github}>
+						<GithubLogo size={24} color="var(--text-color)" class="icon" />
 					</Link>
 				{/if}
 			</div>

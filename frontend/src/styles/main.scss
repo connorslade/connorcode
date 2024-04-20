@@ -1,3 +1,5 @@
+@use 'typefaces';
+
 :root {
 	--background-color: #050505;
 	--text-color: rgb(163, 163, 163);
@@ -15,7 +17,7 @@
 body {
 	background-color: var(--background-color);
 	color: var(--text-color);
-	font-family: sans-serif;
+	font-family: typefaces.$deja-vu-sans;
 
 	margin: 0 1rem 0 1rem;
 }
@@ -33,6 +35,7 @@ h6 {
 	color: var(--alternate-text-color);
 	margin-left: -1em;
 	padding-left: 1em;
+	font-weight: bold;
 
 	&:hover .anchor:before {
 		position: absolute;
@@ -47,6 +50,9 @@ code {
 	border: 1px solid;
 	border-radius: 5px;
 	padding: 0 3px 0 3px;
+
+	font-family: typefaces.$jetbrains-mono;
+	font-size: 0.9em;
 
 	background: var(--code-background);
 	color: var(--code-color);
@@ -76,6 +82,7 @@ pre {
 	border-radius: 5px;
 	padding: 5px;
 	overflow-x: scroll;
+	font-size: 0.9em;
 
 	& code {
 		font-size: inherit;
@@ -113,4 +120,9 @@ blockquote {
 	& > :last-child {
 		margin-bottom: 0;
 	}
+}
+
+math {
+	font-family: typefaces.$latin-modern-math;
+	font-size: 15pt;
 }
