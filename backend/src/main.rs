@@ -19,6 +19,7 @@ mod util;
 mod database;
 mod logger;
 mod markdown;
+mod mime;
 mod routes;
 mod writing;
 

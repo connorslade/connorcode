@@ -126,3 +126,9 @@ math {
 	font-family: typefaces.$latin-modern-math;
 	font-size: 15pt;
 }
+
+video,
+img {
+	max-width: 100%;
+	border-radius: 5px;
+}

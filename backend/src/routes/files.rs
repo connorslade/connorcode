@@ -1,11 +1,9 @@
 use std::{
     fs::{self, File},
-    path::PathBuf,
     time::UNIX_EPOCH,
 };
 
 use afire::{
-    extensions::serve_static::{get_type, TYPES},
     extensions::{serve_static::safe_path, RouteShorthands},
     internal::encoding::url,
     Content, HeaderName, Server,
@@ -13,7 +11,7 @@ use afire::{
 use serde::Serialize;
 use serde_json::json;
 
-use crate::{app::App, markdown};
+use crate::{app::App, markdown, mime::get_content_type};
 
 #[derive(Serialize)]
 struct DirResponse {
@@ -29,8 +27,6 @@ struct DirEntry {
     size: u64,
     last_modified: u64,
 }
-
-const MIME_TYPES: &[(&str, &str)] = &[("md", "text/markdown"), ("wasm", "application/wasm")];
 
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/files**", move |ctx| {
@@ -81,10 +77,7 @@ pub fn attach(server: &mut Server<App>) {
                 .send()?;
         } else {
             let ext = path.extension().map(|x| x.to_string_lossy());
-            let content = ext.and_then(|ext| {
-                get_type(&ext, &TYPES)
-                    .or_else(|| MIME_TYPES.iter().find(|x| x.0 == ext).map(|x| x.1))
-            });
+            let content = get_content_type(ext.as_deref());
 
             if !no_file {
                 let file = File::open(path)?;
