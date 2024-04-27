@@ -20,9 +20,9 @@ impl App {
         database.init()?;
 
         Ok(Self {
+            writing: writing::load(&config.writing_path)?,
             database,
             config,
-            writing: writing::load()?,
         })
     }
 }

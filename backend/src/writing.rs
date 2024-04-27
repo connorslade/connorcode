@@ -1,8 +1,11 @@
-use std::{cmp::Reverse, fs, path::PathBuf};
+use std::{
+    cmp::Reverse,
+    fs,
+    path::{Path, PathBuf},
+};
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use chrono::NaiveDate;
-use glob::glob;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use tracing::{info, warn};
 
@@ -49,7 +52,7 @@ impl Article {
     }
 }
 
-pub fn load() -> Result<Writing> {
+pub fn load(writing_path: &Path) -> Result<Writing> {
     info!("Generating writing cache");
 
     let cache_path = PathBuf::from(".writing_cache");
@@ -59,10 +62,21 @@ pub fn load() -> Result<Writing> {
     fs::create_dir(".writing_cache")?;
 
     let mut articles = Vec::new();
-    // TODO: use env writing path, maybe dont use glob?
-    for path in glob("writing/**/*.md")? {
-        let path = path?;
-        let relative_path = path.strip_prefix("writing/")?;
+
+    let mut files = Vec::new();
+    files.extend(fs::read_dir(writing_path)?.filter_map(Result::ok));
+    while let Some(file) = files.pop() {
+        let path = file.path();
+        if path.is_dir() {
+            files.extend(fs::read_dir(&path)?.filter_map(Result::ok));
+            continue;
+        }
+
+        if path.extension().map_or(true, |e| e != "md") {
+            continue;
+        }
+
+        let relative_path = path.strip_prefix(writing_path)?;
 
         let contents = fs::read_to_string(&path)?;
         let rendered = markdown::render(&contents);
@@ -74,17 +88,18 @@ pub fn load() -> Result<Writing> {
             );
             continue;
         };
-        let front_matter =
-            match serde_yaml::from_str::<FrontMatter>(&front_matter[4..front_matter.len() - 6]) {
-                Ok(e) => e,
-                Err(e) => {
-                    warn!(
-                        "Error parsing frontmatter for article `{}`, skipping: {e}",
-                        relative_path.to_string_lossy()
-                    );
-                    continue;
-                }
-            };
+
+        let end = front_matter.rfind("---").context("Invalid frontmatter?")?;
+        let front_matter = match serde_yaml::from_str::<FrontMatter>(&front_matter[3..end]) {
+            Ok(e) => e,
+            Err(e) => {
+                warn!(
+                    "Error parsing frontmatter for article `{}`, skipping: {e}",
+                    relative_path.to_string_lossy()
+                );
+                continue;
+            }
+        };
 
         let article = Article {
             front_matter,
