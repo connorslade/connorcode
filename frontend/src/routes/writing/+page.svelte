@@ -42,7 +42,7 @@
 
 <p>
 	Here are some random things I have written about. To get notified when new posts are published,
-	you can subscribe to the <a href="/">RSS feed</a>.
+	you can subscribe to the <a href="writing.rss">RSS feed</a>.
 </p>
 
 {#each data.articles as article, idx}

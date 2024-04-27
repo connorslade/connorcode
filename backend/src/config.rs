@@ -7,6 +7,7 @@ pub struct Config {
     pub port: u16,
     pub threads: usize,
     pub database: PathBuf,
+    pub external_url: String,
 
     pub files_path: PathBuf,
     pub writing_path: PathBuf,
@@ -19,6 +20,7 @@ impl Config {
             port: env::var("PORT")?.parse()?,
             threads: env::var("THREADS")?.parse()?,
             database: env::var("DATABASE")?.into(),
+            external_url: env::var("EXTERNAL_URL")?,
 
             files_path: env::var("FILES_PATH")?.into(),
             writing_path: env::var("WRITING_PATH")?.into(),

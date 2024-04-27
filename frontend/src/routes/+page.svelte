@@ -3,6 +3,7 @@
 	import Link from '$lib/components/Link.svelte';
 
 	import { VERSION, GITHUB } from '$lib/consts';
+	import type { PageData } from './$types';
 
 	function get_greeting(): string {
 		let hour = new Date().getHours();
@@ -11,6 +12,8 @@
 		if (hour >= 3) return 'Good morning';
 		return 'Good evening';
 	}
+
+	export let data: PageData;
 </script>
 
 <Head title="Home" description="" />
@@ -67,15 +70,9 @@
 <h3>Writing</h3>
 
 <ul>
-	<li>
-		<a href="/writing/minecraft/list-of-minecraft-enchantments">List of Minecraft Enchantments</a>
-		&mdash; Downloadable and interactive list of all minecraft enchantments
-	</li>
-	<li>
-		<a href="/writing/afire/update-8">afire Update (V2.2.1)</a> &mdash; Updates to afire in V2.2.1
-	</li>
-	<li>
-		<a href="/writing/tutorial/using-libmpv-in-rust">Using libmpv in Rust</a> &mdash; Compiling and linking
-		with libmpv-rs in rust
-	</li>
+	{#each data.articles as article}
+		<li>
+			<Link href={`writing/${article.path}`} open_in="current-tab">{article.title}</Link> &mdash; {article.description}
+		</li>
+	{/each}
 </ul>

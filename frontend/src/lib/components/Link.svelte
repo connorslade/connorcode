@@ -1,15 +1,12 @@
 <script lang="ts">
-	enum OpenIn {
-		NewTab = '_blank',
-		SameTab = '_self'
-	}
+	type OpenIn = 'new-tab' | 'current-tab';
 
 	export let href: string;
-	export let openIn: OpenIn = OpenIn.NewTab;
+	export let open_in: OpenIn = 'new-tab';
 	export let style: string = '';
 </script>
 
-{#if openIn === OpenIn.NewTab}
+{#if open_in === 'new-tab'}
 	<a {href} {style} target="_blank" rel="noopener noreferrer">
 		<slot />
 	</a>
