@@ -1,16 +1,17 @@
-use std::{fs::File, path::PathBuf, sync::Arc};
+use std::{fs::File, path::PathBuf};
 
-use afire::{extensions::RouteShorthands, Content, Server};
-use anyhow::Context;
+use afire::{extensions::RouteShorthands, route::RouteContext, Content, Server};
 use serde_json::json;
 
-use crate::{app::App, writing::Article};
+use crate::app::App;
+
+use super::lookup_article;
 
 pub fn attach(server: &mut Server<App>) {
-    server.get("/api/writing/article/**", |ctx| {
+    server.get("/api/writing/article/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article_path = &ctx.req.path[21..];
-        let article = lookup_article(&app, article_path).context("Article not found")?;
+        let article_path = format!("{}/{}", ctx.param("category"), ctx.param("article"));
+        let article = lookup_article(&app, &article_path).context("Article not found")?;
 
         let base_path = PathBuf::from(".writing_cache");
         let rendered = File::open(
@@ -22,21 +23,14 @@ pub fn attach(server: &mut Server<App>) {
         Ok(())
     });
 
-    server.get("/api/writing/article/info/**", |ctx| {
+    server.get("/api/writing/info/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article_path = &ctx.req.path[26..];
-        let article = lookup_article(&app, article_path).context("Article not found")?;
+        let article_path = format!("{}/{}", ctx.param("category"), ctx.param("article"));
+        let article = lookup_article(&app, &article_path).context("Article not found")?;
 
         ctx.content(Content::JSON)
             .text(json!(article.into_api_response()))
             .send()?;
         Ok(())
     });
-}
-
-fn lookup_article<'a>(app: &'a Arc<App>, path: &str) -> Option<&'a Article> {
-    app.writing
-        .articles
-        .iter()
-        .find(|x| x.front_matter.path == path)
 }

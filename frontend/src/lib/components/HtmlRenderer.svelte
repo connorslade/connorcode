@@ -37,7 +37,14 @@
 	}
 
 	export let html: string;
+	export let base: string | undefined = undefined;
 </script>
+
+<svelte:head>
+	{#if base}
+		<base href={base} />
+	{/if}
+</svelte:head>
 
 <Html
 	{html}

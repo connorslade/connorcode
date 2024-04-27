@@ -9,11 +9,10 @@ type Response = {
 };
 
 export const load: PageServerLoad = async ({ params }): Promise<Response> => {
-	const html = await (
-		await fetch(`${API_SERVER_ADDRESS}/api/writing/article/${params.article}`)
-	).text();
+	const path = `${params.category}/${params.article}`;
+	const html = await (await fetch(`${API_SERVER_ADDRESS}/api/writing/article/${path}`)).text();
 	const info: ArticleInfo = await (
-		await fetch(`${API_SERVER_ADDRESS}/api/writing/article/info/${params.article}`)
+		await fetch(`${API_SERVER_ADDRESS}/api/writing/info/${path}`)
 	).json();
 
 	return { info, html };

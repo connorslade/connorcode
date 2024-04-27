@@ -15,6 +15,7 @@ pub struct Writing {
     pub articles: Vec<Article>,
 }
 
+// TODO: Store category and article in the struct, rather than the path
 #[derive(Deserialize, Serialize)]
 pub struct FrontMatter {
     pub path: String,

@@ -36,7 +36,7 @@
 	info={`published ${data.info.date} &bull; ${data.info.word_count} words &bull; ${reading_time}m reading time`}
 />
 
-<HtmlRenderer html={data.html} />
+<HtmlRenderer html={data.html} base={`/writing/${data.info.path}/`} />
 
 <Rule style="dashed" />
 
