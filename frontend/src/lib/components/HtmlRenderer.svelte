@@ -10,6 +10,7 @@
 
 	import { Heading } from '$lib/types';
 	import HtmlRendererInner from './HtmlRendererInner.svelte';
+	import { onMount } from 'svelte';
 
 	const HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 	let contents: Heading[] = [];
@@ -61,7 +62,7 @@
 					},
 					children: node.children
 				};
-			else if (!href.startsWith('/'))
+			else if (href.startsWith('http'))
 				return {
 					component: Link,
 					props: {
@@ -69,6 +70,19 @@
 					},
 					children: node.children
 				};
+			else {
+				node.attribs['href'] = `${base}/${href}`;
+				return;
+			}
+		} else if ('src' in node.attribs) {
+			node.attribs['src'] = `${base}/${node.attribs['src']}`;
+		} else if (node.name == 'script') {
+			let code = '';
+			for (let child of node.children) if (child.type == 'text') code += child.data;
+
+			onMount(() => {
+				eval(`(() => {${code}})()`);
+			});
 		}
 	}
 
@@ -79,12 +93,6 @@
 	for (let node of parser.childNodes) walk_document(node);
 	contents.forEach((header) => (header.level -= lowest_heading));
 </script>
-
-<svelte:head>
-	{#if base}
-		<base href={base} />
-	{/if}
-</svelte:head>
 
 <Contents {contents} />
 
