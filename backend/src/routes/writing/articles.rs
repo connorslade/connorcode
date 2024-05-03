@@ -1,15 +1,26 @@
 use afire::{extensions::RouteShorthands, Content, Server};
 use serde_json::json;
 
-use crate::{app::App, writing::article::ArticleApiResponse};
+use crate::{
+    app::App,
+    writing::{article::ArticleApiResponse, project::ProjectApiResponse},
+};
 
 pub fn attach(server: &mut Server<App>) {
-    server.get("/api/writing/articles", |ctx| {
-        let articles = &ctx.app().writing.articles;
+    server.get("/api/writing/list", |ctx| {
         let mut out = Vec::new();
-
-        for article in articles {
+        for article in &ctx.app().writing.articles {
             out.push(json!(ArticleApiResponse::from_document(article)));
+        }
+
+        ctx.content(Content::JSON).text(json!(out)).send()?;
+        Ok(())
+    });
+
+    server.get("/api/projects/list", |ctx| {
+        let mut out = Vec::new();
+        for project in &ctx.app().writing.projects {
+            out.push(json!(ProjectApiResponse::from_document(project)));
         }
 
         ctx.content(Content::JSON).text(json!(out)).send()?;

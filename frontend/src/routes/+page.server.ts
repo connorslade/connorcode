@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({
 	params
 }): Promise<{ articles: ReadonlyArray<ArticleInfo> }> => {
 	const articles: ArticleInfo[] = await (
-		await fetch(`${API_SERVER_ADDRESS}/api/writing/articles`)
+		await fetch(`${API_SERVER_ADDRESS}/api/writing/list`)
 	).json();
 
 	articles.splice(ARTICLE_COUNT);

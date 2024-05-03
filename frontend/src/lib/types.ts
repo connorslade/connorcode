@@ -7,6 +7,17 @@ export type ArticleInfo = {
 	word_count: number;
 };
 
+export type ProjectInfo = {
+	slug: string;
+	name: string;
+	date: string;
+	description: string;
+	word_count: number;
+
+	github: string | null;
+	link: string | null;
+};
+
 export class Heading {
 	level: number;
 	text: string;
