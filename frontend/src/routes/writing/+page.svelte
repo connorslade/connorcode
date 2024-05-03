@@ -4,6 +4,7 @@
 	import Head from '$lib/components/Head.svelte';
 	import Rule from '$lib/components/Rule.svelte';
 	import Title from '$lib/components/Title.svelte';
+	import { human_date } from '$lib/utils';
 
 	class NaiveDate {
 		month: number;
@@ -17,21 +18,6 @@
 			this.year = parseInt(parts[2]);
 		}
 	}
-
-	const MONTHS: string[] = [
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December'
-	];
 
 	export let data: PageData;
 
@@ -60,7 +46,7 @@
 					<Title
 						title_element="h3"
 						title={article.title}
-						info={`Published ${article.date}`}
+						info={`Published ${human_date(article.date)}`}
 						title_style="margin-top: 0"
 					/>
 				</div>

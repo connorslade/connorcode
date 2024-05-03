@@ -69,10 +69,16 @@
 
 <h3>Writing</h3>
 
-<ul>
+<ul class="article-list">
 	{#each data.articles as article}
 		<li>
-			<Link href={`writing/${article.path}`} open_in="current-tab">{article.title}</Link> &mdash; {article.description}
+			<Link href={`writing/${article.path}`} open_in="current-tab">{article.title}</Link> &mdash; {@html article.description}
 		</li>
 	{/each}
 </ul>
+
+<style>
+	:global(.article-list p) {
+		display: inline;
+	}
+</style>
