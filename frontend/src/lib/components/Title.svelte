@@ -17,5 +17,6 @@
 	.date {
 		margin-top: 0;
 		font-size: 0.8em;
+		color: var(--text-color);
 	}
 </style>

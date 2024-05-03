@@ -2,6 +2,8 @@
 	import type { PageData } from './$types';
 
 	import Head from '$lib/components/Head.svelte';
+	import Rule from '$lib/components/Rule.svelte';
+	import Title from '$lib/components/Title.svelte';
 
 	class NaiveDate {
 		month: number;
@@ -45,23 +47,41 @@
 	you can subscribe to the <a href="writing.rss">RSS feed</a>.
 </p>
 
+<hr />
+
 {#each data.articles as article, idx}
-	{#if idx == 0 || dates[idx].year != dates[idx - 1].year}
-		<h2>{dates[idx].year}</h2>
+	{#if idx != 0}
+		<Rule thickness="thin" />
 	{/if}
+	<div class="project">
+		<a href={`writing/${article.path}`} class="project-link">
+			<div class="title-container">
+				<div class="left">
+					<Title
+						title_element="h3"
+						title={article.title}
+						info={`Published ${article.date}`}
+						title_style="margin-top: 0"
+					/>
+				</div>
 
-	{#if idx == 0 || dates[idx].month != dates[idx - 1].month}
-		<h3>{MONTHS[dates[idx].month - 1]}</h3>
-	{/if}
+				<div class="right"></div>
+			</div>
+		</a>
 
-	<li>
-		<a href={`/writing/${article.path}`}>{article.title}</a>
-		&mdash; {article.description}
-	</li>
+		{@html article.description}
+	</div>
 {/each}
 
 <style lang="scss">
-	li {
-		margin-left: 40px;
+	.project-link {
+		text-decoration: none;
+	}
+
+	.title-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 18.72px;
 	}
 </style>

@@ -91,7 +91,7 @@ pub fn load(writing_path: &Path) -> Result<Writing> {
         };
 
         let end = front_matter.rfind("---").context("Invalid frontmatter?")?;
-        let front_matter = match serde_yaml::from_str::<FrontMatter>(&front_matter[3..end]) {
+        let mut front_matter = match serde_yaml::from_str::<FrontMatter>(&front_matter[3..end]) {
             Ok(e) => e,
             Err(e) => {
                 warn!(
@@ -101,6 +101,8 @@ pub fn load(writing_path: &Path) -> Result<Writing> {
                 continue;
             }
         };
+
+        front_matter.description = markdown::render(&front_matter.description).html;
 
         let article = Article {
             front_matter,
