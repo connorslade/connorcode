@@ -1,16 +1,19 @@
-use std::path::PathBuf;
+use std::{
+    fmt::{self, Display},
+    path::PathBuf,
+};
 
 use anyhow::{Context, Result};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::markdown;
 
 use super::{Date, Document};
 
-// TODO: Store category and article in the struct, rather than the path
 #[derive(Deserialize, Serialize)]
 pub struct ArticleFrontMatter {
-    pub path: String,
+    #[serde(deserialize_with = "parse_path", serialize_with = "serialize_path")]
+    pub path: Path,
 
     pub title: String,
     pub description: String,
@@ -18,6 +21,11 @@ pub struct ArticleFrontMatter {
     #[serde(flatten)]
     pub date: Date,
     pub tags: Vec<String>,
+}
+
+pub struct Path {
+    pub category: String,
+    pub slug: String,
 }
 
 #[derive(Serialize)]
@@ -49,4 +57,29 @@ impl<'a> ArticleApiResponse<'a> {
             word_count: document.word_count,
         }
     }
+}
+
+impl Display for Path {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}/{}", self.category, self.slug)
+    }
+}
+
+fn parse_path<'de, D>(from: D) -> Result<Path, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let str = String::deserialize(from)?;
+    let (category, slug) = str.split_once('/').unwrap_or_default();
+    Ok(Path {
+        category: category.to_string(),
+        slug: slug.to_string(),
+    })
+}
+
+fn serialize_path<S>(path: &Path, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: serde::Serializer,
+{
+    serializer.serialize_str(&format!("{}/{}", path.category, path.slug))
 }

@@ -32,8 +32,10 @@ pub struct Document<FrontMatter> {
 }
 
 impl Writing {
-    pub fn find_article(&self, path: &str) -> Option<&Article> {
-        self.articles.iter().find(|x| x.front_matter.path == path)
+    pub fn find_article(&self, category: &str, article: &str) -> Option<&Article> {
+        self.articles.iter().find(|x| {
+            x.front_matter.path.category == category && x.front_matter.path.slug == article
+        })
     }
 
     pub fn find_project(&self, path: &str) -> Option<&Project> {

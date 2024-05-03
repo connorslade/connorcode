@@ -8,10 +8,9 @@ use crate::{app::App, writing::article::ArticleApiResponse};
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/writing/article/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article_path = format!("{}/{}", ctx.param("category"), ctx.param("article"));
         let article = app
             .writing
-            .find_article(&article_path)
+            .find_article(ctx.param("category"), ctx.param("article"))
             .context("Article not found")?;
 
         let base_path = PathBuf::from(".writing_cache");
@@ -26,10 +25,9 @@ pub fn attach(server: &mut Server<App>) {
 
     server.get("/api/writing/info/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article_path = format!("{}/{}", ctx.param("category"), ctx.param("article"));
         let article = app
             .writing
-            .find_article(&article_path)
+            .find_article(ctx.param("category"), ctx.param("article"))
             .context("Article not found")?;
 
         ctx.content(Content::JSON)
