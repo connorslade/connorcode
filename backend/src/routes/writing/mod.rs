@@ -1,8 +1,6 @@
-use std::sync::Arc;
-
 use afire::Server;
 
-use crate::{app::App, writing::Article};
+use crate::app::App;
 
 mod article;
 mod articles;
@@ -14,11 +12,4 @@ pub fn attach(server: &mut Server<App>) {
     article::attach(server);
     assets::attach(server);
     rss::attach(server);
-}
-
-fn lookup_article<'a>(app: &'a Arc<App>, path: &str) -> Option<&'a Article> {
-    app.writing
-        .articles
-        .iter()
-        .find(|x| x.front_matter.path == path)
 }

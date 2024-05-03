@@ -20,7 +20,7 @@ pub fn attach(server: &mut Server<App>) {
                 },
                 article.front_matter.title,
                 article.front_matter.description,
-                article.front_matter.date,
+                *article.front_matter.date,
                 app.config.external_url,
                 article.front_matter.path
             ))
