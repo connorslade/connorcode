@@ -23,7 +23,7 @@
 				"Website for Ridge Computer Science Club's yearly hackathon, Ridgehacks! Written as a single page Svelte app.",
 			date: 'February 2, 2024',
 			link: 'https://ridgehacks.us',
-			github: 'https://github.com/Basicprogrammer10/ridgehacks2024'
+			github: 'https://github.com/connorslade/ridgehacks2024'
 		},
 		{
 			name: 'dm42',
@@ -31,7 +31,7 @@
 				"Program compiler for the Free42 HP42 emulator and some miscellaneous programs. Many of which are for my AP Statistics class, because I just can't be normal and use a TI-84.",
 			date: 'July 16, 2023',
 			link: null,
-			github: 'https://github.com/Basicprogrammer10/dm42'
+			github: 'https://github.com/connorslade/dm42'
 		}
 	];
 </script>
@@ -39,7 +39,7 @@
 <h1>Projects</h1>
 
 <p>
-	You can find almost all of my projects on my Github, <Link href={GITHUB}>Basicprogrammer10</Link>.
+	You can find almost all of my projects on my Github, <Link href={GITHUB}>@connorslade</Link>.
 	Some of my more interesting or complete projects will be put here, with articles explaining what
 	they do and how they work.
 </p>
