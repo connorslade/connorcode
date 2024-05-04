@@ -86,17 +86,17 @@ pub fn load(raw_path: &Path) -> Result<Writing> {
 
         let relative_path;
         if path.starts_with(writing_path) {
-            relative_path = path.strip_prefix(writing_path)?;
+            relative_path = path.strip_prefix(writing_path)?.to_path_buf();
             this.articles.push(article::load(
                 &front_matter[3..end],
-                path.to_path_buf(),
+                relative_path.clone(),
                 rendered.word_count,
             )?);
         } else if path.starts_with(project_path) {
-            relative_path = &path;
+            relative_path = PathBuf::from("projects").join(path.strip_prefix(project_path)?);
             this.projects.push(project::load(
                 &front_matter[3..end],
-                path.to_path_buf(),
+                relative_path.clone(),
                 rendered.word_count,
             )?);
         } else {

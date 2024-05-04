@@ -25,14 +25,14 @@ pub fn attach(server: &mut Server<App>) {
     server.get("/api/projects/assets/{project}/**", |ctx| {
         let app = ctx.app();
         let slug = ctx.param("project");
-        let file_path = &ctx.req.path[20 + slug.len()..];
+        let file_path = &ctx.req.path[22 + slug.len()..];
 
         let project = app
             .writing
             .find_project(slug)
             .context("Project not found")?;
         let relative_path = project.filesystem_path.parent().unwrap().join(file_path);
-        let path = app.config.writing_path.join("projects").join(relative_path);
+        let path = app.config.writing_path.join(relative_path);
 
         send_asset(path, ctx)
     });

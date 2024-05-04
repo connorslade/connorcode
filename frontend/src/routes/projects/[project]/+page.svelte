@@ -8,11 +8,13 @@
 	import LinkIcon from 'phosphor-svelte/lib/Link';
 	import type { PageData } from './$types';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
+	import { NaiveDate } from '$lib/date';
 
 	export let data: PageData;
+	let date = new NaiveDate(data.info.date);
 </script>
 
-<Head title="ridgehacks2024" description="todo" />
+<Head title={data.info.name} description={data.info.description} />
 
 <Breadcrumbs
 	crumbs={['projects', data.info.slug]}
@@ -22,7 +24,7 @@
 
 <div class="title-container">
 	<div class="title">
-		<Title title={data.info.name} info="Created February 2, 2024" />
+		<Title title={data.info.name} info="Created {date.human_date()}" />
 	</div>
 	<div class="icons">
 		{#if data.info.link != null}
@@ -38,7 +40,7 @@
 	</div>
 </div>
 
-<HtmlRenderer html={data.html} base={`/project/${data.info.slug}/`} />
+<HtmlRenderer html={data.html} base={`/projects/${data.info.slug}/`} />
 
 <style lang="scss">
 	.title-container {
