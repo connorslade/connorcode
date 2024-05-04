@@ -142,7 +142,9 @@ where
     D: Deserializer<'de>,
 {
     let str = String::deserialize(from)?;
-    Ok(NaiveDate::parse_from_str(&str, "%m-%d-%y").unwrap_or_default())
+    Ok(NaiveDate::parse_from_str(&str, "%m-%d-%y")
+        .or_else(|_| NaiveDate::parse_from_str(&str, "%m-%d-%Y"))
+        .unwrap_or_default())
 }
 
 fn stringify_naive_date<S>(date: &NaiveDate, serializer: S) -> Result<S::Ok, S::Error>
