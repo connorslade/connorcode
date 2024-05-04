@@ -10,7 +10,7 @@ pub fn attach(server: &mut Server<App>) {
     server.get("/api/writing/assets/{category}/{article}/**", |ctx| {
         let app = ctx.app();
         let (category, slug) = (ctx.param("category"), ctx.param("article"));
-        let file_path = &ctx.req.path[21 + category.len() + slug.len()..];
+        let file_path = &ctx.req.path[22 + category.len() + slug.len()..];
 
         let article = app
             .writing

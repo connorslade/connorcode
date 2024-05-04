@@ -6,7 +6,9 @@
 	export let info: string;
 </script>
 
-<svelte:element this={title_element} class="title" style={title_style}>{title}</svelte:element>
+<svelte:element this={title_element} class="title" style={title_style}
+	>{title}<slot name="title-end" /></svelte:element
+>
 <span class="date">{@html info}</span>
 
 <style lang="scss">

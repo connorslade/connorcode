@@ -9,6 +9,7 @@
 
 	import GithubLogo from 'phosphor-svelte/lib/GithubLogo';
 	import LinkIcon from 'phosphor-svelte/lib/Link';
+	import { PushPin } from 'phosphor-svelte';
 
 	export let data: PageData;
 	$: dates = data.projects.map((project) => new NaiveDate(project.date));
@@ -38,7 +39,13 @@
 						title={project.name}
 						info={`Created ${dates[idx].human_date()}`}
 						title_style="margin-top: 0"
-					/>
+					>
+						<div slot="title-end" class="pin-icon">
+							{#if project.pinned}
+								<PushPin size={20} color="var(--text-color)" class="push-pin" />
+							{/if}
+						</div>
+					</Title>
 				</div>
 			</a>
 
@@ -77,5 +84,14 @@
 			display: flex;
 			gap: 8px;
 		}
+	}
+
+	.pin-icon {
+		display: inline;
+		margin-left: 4px;
+	}
+
+	:global(.push-pin) {
+		position: absolute;
 	}
 </style>

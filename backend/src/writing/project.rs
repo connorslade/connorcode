@@ -15,6 +15,8 @@ pub struct ProjectFrontMatter {
     #[serde(flatten)]
     pub date: Date,
     pub description: String,
+    #[serde(default)]
+    pub pinned: bool,
 
     pub github: Option<String>,
     pub link: Option<String>,

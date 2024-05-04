@@ -9,5 +9,8 @@ export const load: PageServerLoad = async ({
 	const projects: ProjectInfo[] = await (
 		await fetch(`${API_SERVER_ADDRESS}/api/projects/list`)
 	).json();
+
+	projects.sort((a, b) => (a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1));
+
 	return { projects };
 };

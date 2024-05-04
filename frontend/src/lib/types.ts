@@ -13,6 +13,7 @@ export type ProjectInfo = {
 	date: string;
 	description: string;
 	word_count: number;
+	pinned: boolean;
 
 	github: string | null;
 	link: string | null;
