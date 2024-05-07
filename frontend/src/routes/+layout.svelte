@@ -5,7 +5,7 @@
 	import '../styles/main.scss';
 
 	function current_year(): number {
-		return new Date().getFullYear();
+		return Math.max(new Date().getFullYear(), 2024);
 	}
 </script>
 

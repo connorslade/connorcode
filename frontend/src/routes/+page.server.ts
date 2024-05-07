@@ -1,18 +1,23 @@
 import type { PageServerLoad } from './$types';
-import type { ArticleInfo } from '$lib/types';
+import type { ArticleInfo, ProjectInfo } from '$lib/types';
 
 import { API_SERVER_ADDRESS } from '$env/static/private';
 
 const ARTICLE_COUNT = 3;
-const PROJECT_COUNT = 0;
+const PROJECT_COUNT = 3;
 
 export const load: PageServerLoad = async ({
 	params
-}): Promise<{ articles: ReadonlyArray<ArticleInfo> }> => {
+}): Promise<{ articles: ReadonlyArray<ArticleInfo>; projects: ReadonlyArray<ProjectInfo> }> => {
 	const articles: ArticleInfo[] = await (
 		await fetch(`${API_SERVER_ADDRESS}/api/writing/list`)
 	).json();
+	const projects: ProjectInfo[] = await (
+		await fetch(`${API_SERVER_ADDRESS}/api/projects/list`)
+	).json();
 
 	articles.splice(ARTICLE_COUNT);
-	return { articles };
+	projects.splice(PROJECT_COUNT);
+
+	return { articles, projects };
 };

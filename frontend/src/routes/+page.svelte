@@ -59,12 +59,12 @@
 
 <h3>Projects</h3>
 
-<ul>
-	<li><Link href="">ridgehacks2024</Link> &mdash; Website for the 2024 Ridgehacks hackathon</li>
-	<li>
-		<Link href="">auto-reauth</Link> &mdash; Automatically re-authenticates your Minecraft session when
-		it expires.
-	</li>
+<ul class="project-list">
+	{#each data.projects as project}
+		<li>
+			<Link href={`projects/${project.slug}`} open_in="current-tab">{project.name}</Link> &mdash; {@html project.description}
+		</li>
+	{/each}
 </ul>
 
 <h3>Writing</h3>
@@ -78,7 +78,13 @@
 </ul>
 
 <style>
-	:global(.article-list p) {
+	:global(.article-list p),
+	:global(.project-list p) {
 		display: inline;
+	}
+
+	.article-list li,
+	.project-list li {
+		margin-bottom: 1em;
 	}
 </style>
