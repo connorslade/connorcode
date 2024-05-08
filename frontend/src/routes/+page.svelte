@@ -22,29 +22,24 @@
 
 <p>
 	{get_greeting()} 👋, I'm Connor Slade. Welcome to my little place on the internet,
-	<Link href="https://connorcode.com">connorcode.com</Link> <em>version {VERSION}</em>! (Finally
-	rewritten in Svelte)
+	<Link href="https://connorcode.com">connorcode.com</Link> <em>version {VERSION}</em>! Finally
+	rewritten with Svelte. (It's still a work in progress).
 </p>
 
 <p>
-	I'm interested in <Link href={GITHUB}>Software development</Link>,
-	<Link href="https://photos.connorcode.com">Photography</Link>,
-	<Link href="https://www.minecraft.net">Minecraft</Link>, and some Web development (as you can
-	see).
-</p>
-
-<p>
-	I started my <em>programming journey</em> around 2014 with the Arduino. Then I learned how to make
-	basic websites with HTML and CSS, then how to make them interactive with JavaScript. After that, I
-	got into Python and eventually started to learn much more about Linux, Docker, different
-	programming languages. After trying many languages I eventually settled on <em>Rust</em> for most of
-	my projects.
+	I'm interested in software development,
+	<Link href="https://photos.connorcode.com">photography</Link>, Minecraft, and some web development
+	(as you can see). I'm currently a high school student in New Jersey interested in furthering my
+	education in the Computer Science and Computer Engineering fields.
 </p>
 
 <h2>Contact</h2>
 
-<p>If you have any questions or comments you can contact through:</p>
-<p></p>
+<p>
+	If you have any questions or comments you can contact me with the following methods. For
+	unnecessary <em>added security</em>
+	you can use my <Link href="key.asc">GPG key</Link> to encrypt your message.
+</p>
 <ul>
 	<li>Discord: <code>sigma76</code></li>
 	<li>Email: <a href="mailto:connor@connorcode.com">connor@connorcode.com</a></li>
