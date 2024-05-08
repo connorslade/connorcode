@@ -5,12 +5,12 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use chrono::NaiveDate;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use tracing::{info, warn};
 
-use crate::markdown;
+use crate::markdown::{self, RenderedMarkdown};
 
 use self::{article::ArticleFrontMatter, project::ProjectFrontMatter};
 pub mod article;
@@ -31,6 +31,11 @@ pub struct Document<FrontMatter> {
     pub word_count: u32,
 }
 
+pub enum DocumentType {
+    Article(Article),
+    Project(Project),
+}
+
 impl Writing {
     pub fn find_article(&self, category: &str, article: &str) -> Option<&Article> {
         self.articles.iter().find(|x| {
@@ -40,6 +45,13 @@ impl Writing {
 
     pub fn find_project(&self, path: &str) -> Option<&Project> {
         self.projects.iter().find(|x| x.front_matter.slug == path)
+    }
+
+    pub fn add_document(&mut self, document: DocumentType) {
+        match document {
+            DocumentType::Article(article) => self.articles.push(article),
+            DocumentType::Project(project) => self.projects.push(project),
+        }
     }
 }
 
@@ -71,37 +83,15 @@ pub fn load(raw_path: &Path) -> Result<Writing> {
             continue;
         }
 
-        let contents = fs::read_to_string(&path)?;
-        let rendered = markdown::render(&contents);
-
-        let Some(front_matter) = rendered.front_matter else {
-            warn!(
-                "Article `{}` is missing its frontmatter, skipping",
-                path.strip_prefix(raw_path)?.display()
-            );
-            continue;
+        let (document, rendered, relative_path) = match load_document(&path, raw_path) {
+            Ok(x) => x,
+            Err(e) => {
+                warn!("Error loading document: {}", e);
+                continue;
+            }
         };
 
-        let end = front_matter.rfind("---").context("Invalid frontmatter?")?;
-
-        let relative_path;
-        if path.starts_with(writing_path) {
-            relative_path = path.strip_prefix(writing_path)?.to_path_buf();
-            this.articles.push(article::load(
-                &front_matter[3..end],
-                relative_path.clone(),
-                rendered.word_count,
-            )?);
-        } else if path.starts_with(project_path) {
-            relative_path = PathBuf::from("projects").join(path.strip_prefix(project_path)?);
-            this.projects.push(project::load(
-                &front_matter[3..end],
-                relative_path.clone(),
-                rendered.word_count,
-            )?);
-        } else {
-            unreachable!("Path is neither a writing nor project path");
-        }
+        this.add_document(document);
 
         let new_path = cache_path.join(relative_path).with_extension("html");
         fs::create_dir_all(new_path.parent().unwrap())?;
@@ -118,6 +108,47 @@ pub fn load(raw_path: &Path) -> Result<Writing> {
     );
 
     Ok(this)
+}
+
+pub fn load_document(
+    path: &PathBuf,
+    writing_dir: &Path,
+) -> Result<(DocumentType, RenderedMarkdown, PathBuf)> {
+    let project_path = &writing_dir.join("projects");
+    let writing_path = &writing_dir.join("writing");
+
+    let contents = fs::read_to_string(path)?;
+    let rendered = markdown::render(&contents);
+
+    let Some(front_matter) = &rendered.front_matter else {
+        bail!(
+            "Article `{}` is missing its frontmatter, skipping",
+            path.strip_prefix(writing_dir)?.display()
+        );
+    };
+
+    let end = front_matter.rfind("---").context("Invalid frontmatter?")?;
+
+    let relative_path;
+    let res = if path.starts_with(writing_path) {
+        relative_path = path.strip_prefix(writing_path)?.to_path_buf();
+        DocumentType::Article(article::load(
+            &front_matter[3..end],
+            relative_path.clone(),
+            rendered.word_count,
+        )?)
+    } else if path.starts_with(project_path) {
+        relative_path = PathBuf::from("projects").join(path.strip_prefix(project_path)?);
+        DocumentType::Project(project::load(
+            &front_matter[3..end],
+            relative_path.clone(),
+            rendered.word_count,
+        )?)
+    } else {
+        unreachable!("Path is neither a writing nor project path");
+    };
+
+    Ok((res, rendered, relative_path))
 }
 
 #[derive(Deserialize, Serialize)]

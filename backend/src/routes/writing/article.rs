@@ -11,8 +11,9 @@ use crate::{
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/writing/article/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article = app
-            .writing
+        let writing = app.writing.read();
+
+        let article = writing
             .find_article(ctx.param("category"), ctx.param("article"))
             .context("Article not found")?;
 
@@ -28,8 +29,9 @@ pub fn attach(server: &mut Server<App>) {
 
     server.get("/api/writing/info/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article = app
-            .writing
+        let writing = app.writing.read();
+
+        let article = writing
             .find_article(ctx.param("category"), ctx.param("article"))
             .context("Article not found")?;
 
@@ -41,8 +43,9 @@ pub fn attach(server: &mut Server<App>) {
 
     server.get("/api/projects/article/{project}", |ctx| {
         let app = ctx.app();
-        let project = app
-            .writing
+        let writing = app.writing.read();
+
+        let project = writing
             .find_project(ctx.param("project"))
             .context("Project not found")?;
 
@@ -58,8 +61,9 @@ pub fn attach(server: &mut Server<App>) {
 
     server.get("/api/projects/info/{project}", |ctx| {
         let app = ctx.app();
-        let article = app
-            .writing
+        let writing = app.writing.read();
+
+        let article = writing
             .find_project(ctx.param("project"))
             .context("Project not found")?;
 

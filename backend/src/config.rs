@@ -8,6 +8,7 @@ pub struct Config {
     pub threads: usize,
     pub database: PathBuf,
     pub external_url: String,
+    pub watch_writing: bool,
 
     pub files_path: PathBuf,
     pub writing_path: PathBuf,
@@ -21,6 +22,7 @@ impl Config {
             threads: env::var("THREADS")?.parse()?,
             database: env::var("DATABASE")?.into(),
             external_url: env::var("EXTERNAL_URL")?,
+            watch_writing: env::var("WATCH_WRITING")?.parse()?,
 
             files_path: env::var("FILES_PATH")?.into(),
             writing_path: env::var("WRITING_PATH")?.into(),

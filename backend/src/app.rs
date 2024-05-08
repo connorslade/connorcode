@@ -1,4 +1,5 @@
 use anyhow::Result;
+use parking_lot::RwLock;
 
 use crate::{
     config::Config,
@@ -10,7 +11,7 @@ pub struct App {
     pub database: Db,
     pub config: Config,
 
-    pub writing: Writing,
+    pub writing: RwLock<Writing>,
 }
 
 impl App {
@@ -19,8 +20,10 @@ impl App {
         let database = Db::new(connection);
         database.init()?;
 
+        let writing = RwLock::new(writing::load(&config.writing_path)?);
+
         Ok(Self {
-            writing: writing::load(&config.writing_path)?,
+            writing,
             database,
             config,
         })

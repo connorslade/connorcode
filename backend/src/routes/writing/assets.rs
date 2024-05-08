@@ -12,8 +12,8 @@ pub fn attach(server: &mut Server<App>) {
         let (category, slug) = (ctx.param("category"), ctx.param("article"));
         let file_path = &ctx.req.path[22 + category.len() + slug.len()..];
 
-        let article = app
-            .writing
+        let writing = app.writing.read();
+        let article = writing
             .find_article(category, slug)
             .context("Article not found")?;
         let relative_path = article.filesystem_path.parent().unwrap().join(file_path);
@@ -27,10 +27,8 @@ pub fn attach(server: &mut Server<App>) {
         let slug = ctx.param("project");
         let file_path = &ctx.req.path[22 + slug.len()..];
 
-        let project = app
-            .writing
-            .find_project(slug)
-            .context("Project not found")?;
+        let writing = app.writing.read();
+        let project = writing.find_project(slug).context("Project not found")?;
         let relative_path = project.filesystem_path.parent().unwrap().join(file_path);
         let path = app.config.writing_path.join(relative_path);
 

@@ -9,7 +9,7 @@ use crate::{
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/writing/list", |ctx| {
         let mut out = Vec::new();
-        for article in &ctx.app().writing.articles {
+        for article in &ctx.app().writing.read().articles {
             out.push(json!(ArticleApiResponse::from_document(article)));
         }
 
@@ -19,7 +19,7 @@ pub fn attach(server: &mut Server<App>) {
 
     server.get("/api/projects/list", |ctx| {
         let mut out = Vec::new();
-        for project in &ctx.app().writing.projects {
+        for project in &ctx.app().writing.read().projects {
             out.push(json!(ProjectApiResponse::from_document(project)));
         }
 
