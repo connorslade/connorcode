@@ -4,7 +4,7 @@ WORKDIR /frontend
 
 COPY . .
 
-RUN npm ci
+RUN npm ci --force
 RUN npm run build
 
 RUN rm -rf src/ static/

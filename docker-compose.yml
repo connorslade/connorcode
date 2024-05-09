@@ -19,6 +19,6 @@ services:
       - 8081:8080
     volumes:
       - ./backend/.env:/backend/.env
-      - V:/Documents:/backend/files
-      - V:/Programming/Projects/connorcode-writing:/backend/writing
+      - /home/connorslade/Documents:/backend/files
+      - /home/connorslade/Programming/connorcode-writing:/backend/writing
       - ./.writing_cache:/backend/.writing_cache
