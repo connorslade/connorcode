@@ -10,6 +10,7 @@
 	import { human_file_size } from '$lib/utils';
 	import Rule from '$lib/components/Rule.svelte';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
+	import { PUBLIC_FILE_ADDRESS } from '$env/static/public';
 
 	$: path = $page.params.path;
 	$: parts = path.split('/');
@@ -47,7 +48,10 @@
 	{/if}
 
 	{#each data.children as file}
-		<a href={`/files/${file.path}`} class="file">
+		<a
+			href={file.is_dir ? `/files/${file.path}` : `${PUBLIC_FILE_ADDRESS}/${file.path}`}
+			class="file"
+		>
 			<div class="name">
 				<svelte:component this={file.is_dir ? Folder : from_ext(file.name.split('.')[1])} />
 				{file.name}

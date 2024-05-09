@@ -26,17 +26,21 @@
 						aria_hidden: node.attribs['aria-hidden']
 					}
 				};
-			else if (!href.startsWith('/'))
+			else if (href.startsWith('http'))
 				return {
 					component: Link,
 					props: {
 						href
 					}
 				};
+			else if (!href.startsWith('/')) node.attribs['href'] = base + href;
+		} else if ('src' in node.attribs && !node.attribs['src'].startsWith('http')) {
+			node.attribs['src'] = base + node.attribs['src'];
 		}
 	}
 
 	export let html: string;
+	export let base: string | undefined = undefined;
 </script>
 
 <Html

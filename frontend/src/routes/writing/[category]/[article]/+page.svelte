@@ -2,7 +2,6 @@
 	import type { PageData } from './$types';
 
 	import Head from '$lib/components/Head.svelte';
-	import Rule from '$lib/components/Rule.svelte';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
 	import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
 	import Title from '$lib/components/Title.svelte';
@@ -36,10 +35,24 @@
 	info={`published ${data.info.date} &bull; ${data.info.word_count} words &bull; ${reading_time}m reading time`}
 />
 
-<HtmlRenderer html={data.html} />
+<HtmlRenderer html={data.html} base={`/writing/${data.info.path}/`} />
 
-<Rule style="dashed" />
+<!-- <Rule style="dashed" />
 
 <h2>Comments</h2>
 
+<textarea class="comment-text"></textarea>
+<br />
+<button>Comment</button>
+
 <p>No comments yet... You can be the first!</p>
+
+<style lang="scss">
+	.comment-text {
+		width: 100%;
+		height: 75px;
+		border-radius: 5px;
+		background-color: var(--background-color);
+		color: var(--text-color);
+	}
+</style> -->

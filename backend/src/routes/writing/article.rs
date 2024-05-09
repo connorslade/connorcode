@@ -1,16 +1,21 @@
-use std::{fs::File, path::PathBuf, sync::Arc};
+use std::{fs::File, path::PathBuf};
 
-use afire::{extensions::RouteShorthands, Content, Server};
-use anyhow::Context;
+use afire::{extensions::RouteShorthands, route::RouteContext, Content, Server};
 use serde_json::json;
 
-use crate::{app::App, writing::Article};
+use crate::{
+    app::App,
+    writing::{article::ArticleApiResponse, project::ProjectApiResponse},
+};
 
 pub fn attach(server: &mut Server<App>) {
-    server.get("/api/writing/article/**", |ctx| {
+    server.get("/api/writing/article/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article_path = &ctx.req.path[21..];
-        let article = lookup_article(&app, article_path).context("Article not found")?;
+        let writing = app.writing.read();
+
+        let article = writing
+            .find_article(ctx.param("category"), ctx.param("article"))
+            .context("Article not found")?;
 
         let base_path = PathBuf::from(".writing_cache");
         let rendered = File::open(
@@ -22,21 +27,49 @@ pub fn attach(server: &mut Server<App>) {
         Ok(())
     });
 
-    server.get("/api/writing/article/info/**", |ctx| {
+    server.get("/api/writing/info/{category}/{article}", |ctx| {
         let app = ctx.app();
-        let article_path = &ctx.req.path[26..];
-        let article = lookup_article(&app, article_path).context("Article not found")?;
+        let writing = app.writing.read();
+
+        let article = writing
+            .find_article(ctx.param("category"), ctx.param("article"))
+            .context("Article not found")?;
 
         ctx.content(Content::JSON)
-            .text(json!(article.into_api_response()))
+            .text(json!(ArticleApiResponse::from_document(article)))
             .send()?;
         Ok(())
     });
-}
 
-fn lookup_article<'a>(app: &'a Arc<App>, path: &str) -> Option<&'a Article> {
-    app.writing
-        .articles
-        .iter()
-        .find(|x| x.front_matter.path == path)
+    server.get("/api/projects/article/{project}", |ctx| {
+        let app = ctx.app();
+        let writing = app.writing.read();
+
+        let project = writing
+            .find_project(ctx.param("project"))
+            .context("Project not found")?;
+
+        let base_path = PathBuf::from(".writing_cache");
+        let rendered = File::open(
+            base_path
+                .join(&project.filesystem_path)
+                .with_extension("html"),
+        )?;
+        ctx.content(Content::HTML).stream(rendered).send()?;
+        Ok(())
+    });
+
+    server.get("/api/projects/info/{project}", |ctx| {
+        let app = ctx.app();
+        let writing = app.writing.read();
+
+        let article = writing
+            .find_project(ctx.param("project"))
+            .context("Project not found")?;
+
+        ctx.content(Content::JSON)
+            .text(json!(ProjectApiResponse::from_document(article)))
+            .send()?;
+        Ok(())
+    });
 }

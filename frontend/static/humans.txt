@@ -7,7 +7,7 @@
 https://connorcode.com
 http://zgurppzm423u2ny7ljdj2m33na4wxoo7zvkvvu4vpce2ure5gplexnqd.onion
 
-https://github.com/Basicprogrammer10/connorcode
+https://github.com/connorslade/connorcode
 
 /* Made By */
 Name:   Connor Slade

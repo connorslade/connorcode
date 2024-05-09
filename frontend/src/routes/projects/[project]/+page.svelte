@@ -6,52 +6,41 @@
 
 	import GithubLogo from 'phosphor-svelte/lib/GithubLogo';
 	import LinkIcon from 'phosphor-svelte/lib/Link';
+	import type { PageData } from './$types';
+	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
+	import { NaiveDate } from '$lib/date';
+
+	export let data: PageData;
+	let date = new NaiveDate(data.info.date);
 </script>
 
-<Head title="ridgehacks2024" description="todo" />
+<Head title={data.info.name} description={data.info.description} />
 
 <Breadcrumbs
-	crumbs={['projects', 'ridgehacks2024']}
-	links={['/projects', '']}
+	crumbs={['projects', data.info.slug]}
+	links={['/projects', `/projects/${data.info.slug}`]}
 	style="margin-bottom: 0"
 />
 
 <div class="title-container">
 	<div class="title">
-		<Title title="ridgehacks2024" info="Created February 2, 2024" />
+		<Title title={data.info.name} info="Created {date.human_date()}" />
 	</div>
 	<div class="icons">
-		<Link href="/">
-			<LinkIcon size={24} color="var(--text-color)" class="icon" />
-		</Link>
-		<Link href="/">
-			<GithubLogo size={24} color="var(--text-color)" class="icon" />
-		</Link>
+		{#if data.info.link != null}
+			<Link href={data.info.link}>
+				<LinkIcon size={24} color="var(--text-color)" class="icon" />
+			</Link>
+		{/if}
+		{#if data.info.github != null}
+			<Link href={data.info.github}>
+				<GithubLogo size={24} color="var(--text-color)" class="icon" />
+			</Link>
+		{/if}
 	</div>
 </div>
 
-<p>
-	This is the website for Ridge Computer Science Club's yearly hackathon, Ridgehacks! Written as a
-	single page Svelte app.
-</p>
-
-<img src="https://i.imgur.com/ZmA2UI4.png" alt="" />
-
-<p>
-	We just decided to continue with the general design style from the previous year's websites. Which
-	you can see with the following links:
-</p>
-
-<ul>
-	<li><a href="/">2023</a></li>
-	<li><a href="/">2022</a></li>
-	<li><a href="/">2021</a></li>
-</ul>
-
-<p>
-	For next year, I am hoping to make a more stylized site, maybe like some kinda 90s hacker thing.
-	Ill probably take lots of inspiration from old archived GeoCities sites.
-</p>
+<HtmlRenderer html={data.html} base={`/projects/${data.info.slug}/`} />
 
 <style lang="scss">
 	.title-container {
