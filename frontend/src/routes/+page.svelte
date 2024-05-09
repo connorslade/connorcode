@@ -2,7 +2,7 @@
 	import Head from '$lib/components/Head.svelte';
 	import Link from '$lib/components/Link.svelte';
 
-	import { VERSION, GITHUB } from '$lib/consts';
+	import { VERSION } from '$lib/consts';
 	import type { PageData } from './$types';
 
 	function get_greeting(): string {
@@ -27,17 +27,16 @@
 </p>
 
 <p>
-	I'm interested in software development,
-	<Link href="https://photos.connorcode.com">photography</Link>, Minecraft, and some web development
-	(as you can see). I'm currently a high school student in New Jersey interested in furthering my
-	education in the Computer Science and Computer Engineering fields.
+	I'm interested in software development, photography, Minecraft modding, and some web development
+	(as you can see). I'm currently a high school student in New Jersey interested in Computer Science
+	and Computer Engineering related things.
 </p>
 
 <h2>Contact</h2>
 
 <p>
-	If you have any questions or comments you can contact me with the following methods. For
-	unnecessary <em>added security</em>
+	If you have any questions, comments, or commission requests, you can contact me through the
+	following methods. For unnecessary <em>added security</em>
 	you can use my <Link href="key.asc">GPG key</Link> to encrypt your message.
 </p>
 <ul>

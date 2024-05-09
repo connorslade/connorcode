@@ -41,4 +41,18 @@
 
 <h2>Comments</h2>
 
-<p>No comments yet... You can be the first!</p> -->
+<textarea class="comment-text"></textarea>
+<br />
+<button>Comment</button>
+
+<p>No comments yet... You can be the first!</p>
+
+<style lang="scss">
+	.comment-text {
+		width: 100%;
+		height: 75px;
+		border-radius: 5px;
+		background-color: var(--background-color);
+		color: var(--text-color);
+	}
+</style> -->
