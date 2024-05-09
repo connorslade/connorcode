@@ -8,7 +8,7 @@ pub fn attach(server: &mut Server<App>) {
         let app = ctx.app();
 
         let mut articles = Vec::new();
-        for article in app.writing.read().articles.iter().take(5) {
+        for article in app.writing.read().get_articles().take(5) {
             articles.push(format!(
                 indoc! {
                     r#"<item>

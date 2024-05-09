@@ -17,6 +17,8 @@ pub struct ProjectFrontMatter {
     pub description: String,
     #[serde(default)]
     pub pinned: bool,
+    #[serde(default)]
+    pub hidden: bool,
 
     pub github: Option<String>,
     pub link: Option<String>,

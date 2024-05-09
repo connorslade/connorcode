@@ -38,13 +38,27 @@ pub enum DocumentType {
 
 impl Writing {
     pub fn find_article(&self, category: &str, article: &str) -> Option<&Article> {
-        self.articles.iter().find(|x| {
-            x.front_matter.path.category == category && x.front_matter.path.slug == article
-        })
+        self.articles
+            .iter()
+            .find(|x| {
+                x.front_matter.path.category == category && x.front_matter.path.slug == article
+            })
+            .filter(|x| !x.front_matter.hidden)
     }
 
     pub fn find_project(&self, path: &str) -> Option<&Project> {
-        self.projects.iter().find(|x| x.front_matter.slug == path)
+        self.projects
+            .iter()
+            .find(|x| x.front_matter.slug == path)
+            .filter(|x| !x.front_matter.hidden)
+    }
+
+    pub fn get_articles(&self) -> impl Iterator<Item = &Article> {
+        self.articles.iter().filter(|x| !x.front_matter.hidden)
+    }
+
+    pub fn get_projects(&self) -> impl Iterator<Item = &Project> {
+        self.projects.iter().filter(|x| !x.front_matter.hidden)
     }
 
     pub fn add_document(&mut self, document: DocumentType) {

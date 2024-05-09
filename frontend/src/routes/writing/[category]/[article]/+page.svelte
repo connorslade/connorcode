@@ -2,7 +2,6 @@
 	import type { PageData } from './$types';
 
 	import Head from '$lib/components/Head.svelte';
-	import Rule from '$lib/components/Rule.svelte';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
 	import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
 	import Title from '$lib/components/Title.svelte';
@@ -38,8 +37,8 @@
 
 <HtmlRenderer html={data.html} base={`/writing/${data.info.path}/`} />
 
-<Rule style="dashed" />
+<!-- <Rule style="dashed" />
 
 <h2>Comments</h2>
 
-<p>No comments yet... You can be the first!</p>
+<p>No comments yet... You can be the first!</p> -->

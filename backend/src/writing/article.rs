@@ -17,6 +17,8 @@ pub struct ArticleFrontMatter {
 
     pub title: String,
     pub description: String,
+    #[serde(default)]
+    pub hidden: bool,
 
     #[serde(flatten)]
     pub date: Date,
