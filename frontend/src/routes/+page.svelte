@@ -28,8 +28,8 @@
 
 <p>
 	I'm interested in software development, photography, Minecraft modding, and some web development
-	(as you can see). I'm currently a high school student in New Jersey interested in Computer Science
-	and Computer Engineering related things.
+	(as you can see). I'm currently a high school student in New Jersey interested in computer science
+	and computer engineering related things.
 </p>
 
 <h2>Contact</h2>

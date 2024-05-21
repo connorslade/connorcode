@@ -23,6 +23,11 @@
 	do and how they work.
 </p>
 
+<p>
+	Note that because this version of my website is still a work in progress, I have not yet added all
+	of my interesting projects here.
+</p>
+
 <hr />
 
 {#each data.projects as project, idx}

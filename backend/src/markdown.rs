@@ -9,7 +9,7 @@ use comrak::{
     Arena, ExtensionOptions, Options, ParseOptions, Plugins, RenderOptions,
 };
 use latex2mathml::{latex_to_mathml, DisplayStyle};
-use syntect::highlighting::ThemeSet;
+use syntect::{highlighting::ThemeSet, parsing::SyntaxSet};
 
 use crate::regex;
 
@@ -60,8 +60,12 @@ pub fn default_plugins() -> &'static Plugins<'static> {
         let theme = ThemeSet::get_theme("assets/OneDark.tmTheme").unwrap();
         theme_set.themes.insert("Atom One Dark".to_owned(), theme);
 
+        let mut syntax_set = SyntaxSet::load_defaults_newlines().into_builder();
+        syntax_set.add_from_folder("assets", true).unwrap();
+
         let syntect = Box::new(
             SyntectAdapterBuilder::new()
+                .syntax_set(syntax_set.build())
                 .theme_set(theme_set)
                 .theme("Atom One Dark")
                 .build(),

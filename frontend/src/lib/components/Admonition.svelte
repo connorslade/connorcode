@@ -24,7 +24,7 @@
 	};
 
 	export let title: string;
-	export let type: string;
+	export let type: 'tip' | 'info' | 'note' | 'warning' | 'important' | 'caution';
 
 	let style = STYLES[type];
 </script>
