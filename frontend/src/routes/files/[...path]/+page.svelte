@@ -10,7 +10,7 @@
 	import { human_file_size } from '$lib/utils';
 	import Rule from '$lib/components/Rule.svelte';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
-	import { PUBLIC_FILE_ADDRESS } from '$env/static/public';
+	import * as _public from '$env/dynamic/public';
 
 	$: path = $page.params.path;
 	$: parts = path.split('/');
@@ -49,7 +49,7 @@
 
 	{#each data.children as file}
 		<a
-			href={file.is_dir ? `/files/${file.path}` : `${PUBLIC_FILE_ADDRESS}/${file.path}`}
+			href={file.is_dir ? `/files/${file.path}` : `${_public.env.PUBLIC_FILE_ADDRESS}/${file.path}`}
 			class="file"
 		>
 			<div class="name">
