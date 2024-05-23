@@ -77,9 +77,17 @@ pub fn load(raw_path: &Path) -> Result<Writing> {
 
     let cache_path = PathBuf::from(".writing_cache");
     if cache_path.exists() {
-        fs::remove_dir_all(".writing_cache")?;
+        for file in fs::read_dir(&cache_path)?.filter_map(|x| x.ok()) {
+            let file_type = file.file_type()?;
+            if file_type.is_dir() {
+                fs::remove_dir_all(file.path())?;
+            } else {
+                fs::remove_file(file.path())?;
+            }
+        }
+    } else {
+        fs::create_dir(&cache_path)?;
     }
-    fs::create_dir(".writing_cache")?;
 
     let mut this = Writing::default();
 

@@ -4,4 +4,5 @@ data.db*
 
 /writing
 /.writing_cache
+/.database
 /files

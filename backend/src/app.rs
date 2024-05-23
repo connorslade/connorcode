@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use parking_lot::RwLock;
 
 use crate::{
@@ -16,11 +16,12 @@ pub struct App {
 
 impl App {
     pub fn new(config: Config) -> Result<Self> {
-        let connection = rusqlite::Connection::open(&config.database)?;
+        let connection =
+            rusqlite::Connection::open(&config.database).context("Opening database")?;
         let database = Db::new(connection);
-        database.init()?;
+        database.init().context("Initializing database")?;
 
-        let writing = RwLock::new(writing::load(&config.writing_path)?);
+        let writing = RwLock::new(writing::load(&config.writing_path).context("Loading articles")?);
 
         Ok(Self {
             writing,

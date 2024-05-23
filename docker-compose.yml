@@ -5,11 +5,12 @@ services:
       context: ./frontend
       dockerfile: dockerfile
     ports:
-      - 8080:8080
+      - 8080:3000
     depends_on:
       - backend
-    volumes:
-      - ./frontend/.env:/frontend/.env
+    environment:
+      - API_SERVER_ADDRESS=http://backend:8080
+      - PUBLIC_FILE_ADDRESS=http://localhost:8081/api/files
 
   backend:
     build:
@@ -17,8 +18,10 @@ services:
       dockerfile: dockerfile
     ports:
       - 8081:8080
+    env_file:
+      - ./backend/.env
     volumes:
-      - ./backend/.env:/backend/.env
-      - /home/connorslade/Documents:/backend/files
-      - /home/connorslade/Programming/connorcode-writing:/backend/writing
-      - ./.writing_cache:/backend/.writing_cache
+      - ./backend/files:/backend/files
+      - ./backend/writing:/backend/writing
+      - ./backend/.writing_cache:/backend/.writing_cache
+      - ./backend/.database:/backend/database
