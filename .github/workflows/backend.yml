@@ -17,4 +17,5 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build
+        working-directory: backend
         run: cargo build
