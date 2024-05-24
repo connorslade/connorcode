@@ -27,7 +27,7 @@ pub struct ArticleFrontMatter {
 
 pub struct Path {
     pub category: String,
-    pub slug: String,
+    pub slug: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -63,7 +63,11 @@ impl<'a> ArticleApiResponse<'a> {
 
 impl Display for Path {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}/{}", self.category, self.slug)
+        if let Some(slug) = &self.slug {
+            write!(f, "{}/{}", self.category, slug)
+        } else {
+            write!(f, "{}", self.category)
+        }
     }
 }
 
@@ -72,16 +76,26 @@ where
     D: Deserializer<'de>,
 {
     let str = String::deserialize(from)?;
-    let (category, slug) = str.split_once('/').unwrap_or_default();
-    Ok(Path {
-        category: category.to_string(),
-        slug: slug.to_string(),
-    })
+    if let Some((category, slug)) = str.split_once('/') {
+        Ok(Path {
+            category: category.to_string(),
+            slug: Some(slug.to_string()),
+        })
+    } else {
+        Ok(Path {
+            category: str,
+            slug: None,
+        })
+    }
 }
 
 fn serialize_path<S>(path: &Path, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: serde::Serializer,
 {
-    serializer.serialize_str(&format!("{}/{}", path.category, path.slug))
+    if let Some(slug) = &path.slug {
+        serializer.serialize_str(&format!("{}/{}", path.category, slug))
+    } else {
+        serializer.serialize_str(&path.category)
+    }
 }

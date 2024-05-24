@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { PageData } from './$types';
+
 	import Breadcrumbs from '$lib/components/Breadcrumbs.svelte';
 	import Title from '$lib/components/Title.svelte';
 	import Link from '$lib/components/Link.svelte';
@@ -6,7 +8,6 @@
 
 	import GithubLogo from 'phosphor-svelte/lib/GithubLogo';
 	import LinkIcon from 'phosphor-svelte/lib/Link';
-	import type { PageData } from './$types';
 	import HtmlRenderer from '$lib/components/HtmlRenderer.svelte';
 	import { NaiveDate } from '$lib/date';
 
