@@ -22,7 +22,7 @@
 	export let data: PageData;
 </script>
 
-<Head title="Files" description="todo" />
+<Head title="Files" description="My file server." />
 
 <h1>Files</h1>
 

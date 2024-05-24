@@ -11,7 +11,7 @@
 	$: dates = data.articles.map((article) => new NaiveDate(article.date));
 </script>
 
-<Head title="Writing" description="todo" />
+<Head title="Writing" description="Here are some random things I have written about." />
 
 <h1>Writing</h1>
 

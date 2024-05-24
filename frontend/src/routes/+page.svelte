@@ -16,7 +16,10 @@
 	export let data: PageData;
 </script>
 
-<Head title="Home" description="" />
+<Head
+	title="Home"
+	description="Hello world, I'm Connor Slade. Welcome to my little place on the internet, connorcode.com version 3.0.0!"
+/>
 
 <h1>Home</h1>
 
