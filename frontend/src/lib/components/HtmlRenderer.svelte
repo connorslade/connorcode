@@ -48,6 +48,8 @@
 	}
 
 	onMount(() => {
+		(window as any).BASE_PATH = base;
+
 		for (let src of src_scripts) {
 			let script = document.createElement('script');
 			script.src = base + src;
