@@ -29,6 +29,8 @@ pub struct ProjectApiResponse<'a> {
     #[serde(flatten)]
     pub front_matter: &'a ProjectFrontMatter,
     pub word_count: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub views: Option<u32>,
 }
 
 pub fn load(
@@ -51,6 +53,18 @@ impl<'a> ProjectApiResponse<'a> {
         ProjectApiResponse {
             front_matter: &document.front_matter,
             word_count: document.word_count,
+            views: None,
+        }
+    }
+
+    pub fn from_document_with_views(
+        document: &'a Document<ProjectFrontMatter>,
+        views: u32,
+    ) -> ProjectApiResponse<'a> {
+        ProjectApiResponse {
+            front_matter: &document.front_matter,
+            word_count: document.word_count,
+            views: Some(views),
         }
     }
 }

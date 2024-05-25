@@ -5,7 +5,7 @@
 	export let links: string[];
 </script>
 
-<p {style}>
+<p {style} class="breadcrumb-container">
 	{#each crumbs as crumb, idx}
 		{#if idx != 0}
 			&nbsp;»
@@ -15,6 +15,10 @@
 </p>
 
 <style lang="scss">
+	.breadcrumb-container {
+		text-align: left;
+	}
+
 	.breadcrumb {
 		color: var(--font-color);
 		text-decoration: none;

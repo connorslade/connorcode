@@ -72,8 +72,6 @@ impl Db {
         this.pragma_update(None, "wal_checkpoint", "TRUNCATE")?;
         this.pragma_update(None, "optimize", "")?;
         this.pragma_update(None, "wal_checkpoint", "TRUNCATE")?;
-        drop(this);
-
         Ok(())
     }
 }
@@ -92,5 +90,15 @@ impl Db {
             ],
         )?;
         Ok(())
+    }
+
+    pub fn get_view_count(&self, page: &str) -> Result<u32> {
+        const VIEW_TIMEOUT: u32 = 60 * 20;
+        let count = self.lock().query_row(
+            include_str!("sql/view_count.sql"),
+            params![VIEW_TIMEOUT, page],
+            |row| row.get::<_, u32>(0),
+        )?;
+        Ok(count)
     }
 }

@@ -5,6 +5,7 @@ export type ArticleInfo = {
 	tags: string[];
 	title: string;
 	word_count: number;
+	views: number;
 };
 
 export type ProjectInfo = {
@@ -14,6 +15,7 @@ export type ProjectInfo = {
 	description: string;
 	word_count: number;
 	pinned: boolean;
+	views: number;
 
 	github: string | null;
 	link: string | null;

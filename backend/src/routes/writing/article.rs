@@ -32,12 +32,18 @@ pub fn attach(server: &mut Server<App>) {
             let app = ctx.app();
             let writing = app.writing.read();
 
+            let (category, article_name) = (ctx.param("category"), ctx.param("article"));
             let article = writing
-                .find_article(ctx.param("category"), ctx.param("article"))
+                .find_article(category, article_name)
                 .context("Article not found")?;
 
+            let views = app
+                .database
+                .get_view_count(&format!("/writing/{category}/{article_name}"))?;
             ctx.content(Content::JSON)
-                .text(json!(ArticleApiResponse::from_document(article)))
+                .text(json!(ArticleApiResponse::from_document_with_views(
+                    article, views
+                )))
                 .send()?;
             Ok(())
         });
@@ -66,12 +72,18 @@ pub fn attach(server: &mut Server<App>) {
             let app = ctx.app();
             let writing = app.writing.read();
 
+            let category = ctx.param("category");
             let article = writing
-                .find_article_category(ctx.param("category"))
+                .find_article_category(category)
                 .context("Article category not found")?;
 
+            let views = app
+                .database
+                .get_view_count(&format!("/writing/{category}"))?;
             ctx.content(Content::JSON)
-                .text(json!(ArticleApiResponse::from_document(article)))
+                .text(json!(ArticleApiResponse::from_document_with_views(
+                    article, views
+                )))
                 .send()?;
             Ok(())
         });
@@ -100,12 +112,16 @@ pub fn attach(server: &mut Server<App>) {
             let app = ctx.app();
             let writing = app.writing.read();
 
-            let article = writing
-                .find_project(ctx.param("project"))
-                .context("Project not found")?;
+            let project = ctx.param("project");
+            let article = writing.find_project(project).context("Project not found")?;
 
+            let views = app
+                .database
+                .get_view_count(&format!("/projects/{project}"))?;
             ctx.content(Content::JSON)
-                .text(json!(ProjectApiResponse::from_document(article)))
+                .text(json!(ProjectApiResponse::from_document_with_views(
+                    article, views
+                )))
                 .send()?;
             Ok(())
         });

@@ -29,7 +29,8 @@
 	<div class="title">
 		<Title
 			title={data.info.name}
-			info="created {date.human_date()} &bull; {reading_time}m reading time"
+			info="created {date.human_date()} &bull; {reading_time}m reading time &bull; {data.info
+				.views} views"
 		/>
 	</div>
 	<div class="icons">
