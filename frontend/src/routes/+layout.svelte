@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { navigating } from '$app/stores';
+	import { dev } from '$app/environment';
 
 	import Link from '$lib/components/Link.svelte';
 	import { GITHUB, VERSION } from '$lib/consts';
 
 	import '../styles/main.scss';
-	import { navigating } from '$app/stores';
 
 	function current_year(): number {
 		return Math.max(new Date().getFullYear(), 2024);
@@ -16,6 +17,7 @@
 		referrer: string | null;
 		user_agent: string | null;
 	}) {
+		if (dev) return;
 		fetch(`/api/analytics`, {
 			method: 'POST',
 			headers: {
