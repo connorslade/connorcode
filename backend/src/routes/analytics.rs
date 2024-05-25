@@ -1,4 +1,7 @@
-use std::net::{IpAddr, Ipv4Addr};
+use std::{
+    net::{IpAddr, Ipv4Addr},
+    time::SystemTime,
+};
 
 use afire::{
     extensions::{RealIp, RouteShorthands},
@@ -12,6 +15,7 @@ use crate::app::App;
 
 #[derive(Debug)]
 pub struct Analytics {
+    pub timestamp: u64,
     pub ip: Ipv4Addr,
     pub page: String,
     pub referrer: Option<String>,
@@ -45,8 +49,14 @@ pub fn attach(server: &mut Server<App>) {
 
 impl Request {
     pub fn into_analytics(self, ip: Ipv4Addr) -> Analytics {
+        let timestamp = SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+
         Analytics {
             ip,
+            timestamp,
             page: self.page,
             referrer: self.referrer,
             user_agent: self.user_agent,

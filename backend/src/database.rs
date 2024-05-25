@@ -6,7 +6,7 @@ use rusqlite::{params, Connection};
 use tracing::{error, info};
 
 // Increment every time schema changes in a non backwards compatible way, even in dev
-const DATABASE_VERSION: u64 = 0;
+const DATABASE_VERSION: u64 = 1;
 
 pub struct Db {
     inner: Mutex<Option<Connection>>,
@@ -82,8 +82,14 @@ impl Db {
     pub fn insert_analytics(&self, data: crate::routes::analytics::Analytics) -> Result<()> {
         let ip = u32::from_be_bytes(data.ip.octets());
         self.lock().execute(
-            "INSERT INTO analytics VALUES (?, ?, ?, ?)",
-            params![ip, data.page, data.referrer, data.user_agent],
+            "INSERT INTO analytics VALUES (?, ?, ?, ?, ?)",
+            params![
+                data.timestamp,
+                ip,
+                data.page,
+                data.referrer,
+                data.user_agent
+            ],
         )?;
         Ok(())
     }
