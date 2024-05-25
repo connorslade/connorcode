@@ -7,7 +7,7 @@
 - [ ] Make inline code look nicer
 - [x] Reformat writing to have a `articles` and `projects` dir
 - [x] Load projects from backend
-- [ ] Frontend caching policy
+- [x] Frontend caching policy
 - [x] Meta descriptions
 - [ ] Projects in rss feed
 - [x] Writing category pages
