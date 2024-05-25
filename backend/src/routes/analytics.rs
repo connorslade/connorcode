@@ -5,13 +5,12 @@ use std::{
 
 use afire::{
     extensions::{RealIp, RouteShorthands},
-    route::RouteContext,
     Content, Server,
 };
 use serde::Deserialize;
 use ureq::json;
 
-use crate::app::App;
+use crate::{app::App, misc::util::bail};
 
 #[derive(Debug)]
 pub struct Analytics {
@@ -32,7 +31,7 @@ struct Request {
 pub fn attach(server: &mut Server<App>) {
     server.post("/api/analytics", |ctx| {
         let IpAddr::V4(ip) = ctx.real_ip() else {
-            return None.context("Ipv6 addresses are not supported")?;
+            return bail("Ipv6 addresses are not supported");
         };
 
         let data = serde_json::from_slice::<Request>(&ctx.req.body)?.into_analytics(ip);

@@ -23,7 +23,7 @@ pub fn attach(server: &mut Server<App>) {
         let mut downloads = 0;
         let mut cache = cache.force_lock();
         for service in &services {
-            if let Some(i) = cache.get(&service) {
+            if let Some(i) = cache.get(service) {
                 if !i.older_than(CACHE_DURATION) {
                     downloads += i.get();
                     out[service.service.name()] = (*i.get()).into();
