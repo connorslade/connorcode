@@ -59,7 +59,10 @@ impl Db {
         }
 
         let trans = this.transaction()?;
-        for i in [include_str!("sql/init_analytics.sql")] {
+        for i in [
+            include_str!("sql/init_analytics.sql"),
+            include_str!("sql/init_legacy_views.sql"),
+        ] {
             trans.execute(i, [])?;
         }
         trans.commit()?;
