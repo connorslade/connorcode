@@ -12,7 +12,9 @@
 	import { NaiveDate } from '$lib/date';
 
 	export let data: PageData;
+
 	let date = new NaiveDate(data.info.date);
+	$: reading_time = (data.info.word_count / 3.5 / 60).toFixed(0);
 </script>
 
 <Head title={data.info.name} description={data.info.description} />
@@ -25,7 +27,10 @@
 
 <div class="title-container">
 	<div class="title">
-		<Title title={data.info.name} info="Created {date.human_date()}" />
+		<Title
+			title={data.info.name}
+			info="created {date.human_date()} &bull; {reading_time}m reading time"
+		/>
 	</div>
 	<div class="icons">
 		{#if data.info.link != null}
