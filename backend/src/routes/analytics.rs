@@ -32,7 +32,6 @@ pub fn attach(server: &mut Server<App>) {
         };
 
         let data = serde_json::from_slice::<Request>(&ctx.req.body)?.into_analytics(ip);
-        dbg!(&data);
 
         ctx.content(Content::JSON)
             .text(json!({"status": "ok"}))

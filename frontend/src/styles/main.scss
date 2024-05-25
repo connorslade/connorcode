@@ -126,6 +126,10 @@ blockquote {
 math {
 	font-family: typefaces.$latin-modern-math;
 	font-size: 15pt;
+	max-width: -webkit-fill-available;
+	overflow-x: auto;
+	overflow-y: clip;
+	scrollbar-width: thin;
 }
 
 video,
