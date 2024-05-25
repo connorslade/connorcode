@@ -20,7 +20,8 @@
 
 <Title
 	title={data.info.title}
-	info={`published ${data.info.date} &bull; ${data.info.word_count} words &bull; ${reading_time}m reading time`}
+	info="published {data.info.date} &bull; {reading_time}m reading time &bull; {data.info
+		.views} views"
 />
 
 <HtmlRenderer html={data.html} base={`/writing/${data.info.path}/`} />

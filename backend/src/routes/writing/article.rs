@@ -39,7 +39,7 @@ pub fn attach(server: &mut Server<App>) {
 
             let views = app
                 .database
-                .get_view_count(&format!("/writing/{category}/{article_name}"))?;
+                .get_view_count(&format!("writing/{category}/{article_name}"))?;
             ctx.content(Content::JSON)
                 .text(json!(ArticleApiResponse::from_document_with_views(
                     article, views
@@ -79,7 +79,7 @@ pub fn attach(server: &mut Server<App>) {
 
             let views = app
                 .database
-                .get_view_count(&format!("/writing/{category}"))?;
+                .get_view_count(&format!("writing/{category}"))?;
             ctx.content(Content::JSON)
                 .text(json!(ArticleApiResponse::from_document_with_views(
                     article, views
@@ -117,7 +117,7 @@ pub fn attach(server: &mut Server<App>) {
 
             let views = app
                 .database
-                .get_view_count(&format!("/projects/{project}"))?;
+                .get_view_count(&format!("projects/{project}"))?;
             ctx.content(Content::JSON)
                 .text(json!(ProjectApiResponse::from_document_with_views(
                     article, views

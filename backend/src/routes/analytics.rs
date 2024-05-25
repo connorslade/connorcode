@@ -8,6 +8,7 @@ use afire::{
     Content, Server,
 };
 use serde::Deserialize;
+use tracing::error;
 use ureq::json;
 
 use crate::{app::App, misc::util::bail};
@@ -40,7 +41,9 @@ pub fn attach(server: &mut Server<App>) {
             .text(json!({"status": "ok"}))
             .send()?;
 
-        ctx.app().database.insert_analytics(data)?;
+        if let Err(err) = ctx.app().database.insert_analytics(data) {
+            error!("Analytics error: {:?}", err);
+        }
 
         Ok(())
     });
