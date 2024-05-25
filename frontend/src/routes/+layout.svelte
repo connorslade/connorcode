@@ -36,14 +36,16 @@
 	});
 
 	let last_page = '';
-	$navigating?.complete.then(() => {
-		let page = $navigating.to?.url!.pathname!;
-		if (page === last_page) return;
-		last_page = page;
-		send_analytics({
-			page,
-			referrer: $navigating.from?.url.toString() ?? null,
-			user_agent: navigator.userAgent === '' ? null : navigator.userAgent
+	navigating.subscribe((navigating) => {
+		navigating?.complete.then(() => {
+			let page = navigating.to?.url!.pathname!;
+			if (page === last_page) return;
+			last_page = page;
+			send_analytics({
+				page,
+				referrer: navigating.from?.url.toString() ?? null,
+				user_agent: navigator.userAgent === '' ? null : navigator.userAgent
+			});
 		});
 	});
 </script>
