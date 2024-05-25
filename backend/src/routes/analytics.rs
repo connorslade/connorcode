@@ -1,16 +1,72 @@
-use afire::{extensions::RouteShorthands, Server};
+use std::net::{IpAddr, Ipv4Addr};
+
+use afire::{
+    extensions::{RealIp, RouteShorthands},
+    route::RouteContext,
+    Content, Server,
+};
+use serde::Deserialize;
+use ureq::json;
 
 use crate::app::App;
 
+#[derive(Debug)]
+pub struct Analytics {
+    pub ip: Ipv4Addr,
+    pub page: String,
+    pub method: Method,
+    pub referrer: Option<String>,
+    pub user_agent: Option<String>,
+}
+
+#[repr(u8)]
+#[derive(Debug, Deserialize)]
+pub enum Method {
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    OPTIONS,
+    HEAD,
+    PATCH,
+    TRACE,
+}
+
+#[derive(Deserialize)]
 struct Request {
-    ip: String,
     page: String,
-    referrer: String,
+    method: Method,
+    referrer: Option<String>,
+    user_agent: Option<String>,
 }
 
 pub fn attach(server: &mut Server<App>) {
     server.post("/api/analytics", |ctx| {
-        //todo
+        let IpAddr::V4(ip) = ctx.real_ip() else {
+            return None.context("Ipv6 addresses are not supported")?;
+        };
+
+        let data = serde_json::from_slice::<Request>(&ctx.req.body)?.into_analytics(ip);
+        dbg!(&data);
+
+        ctx.content(Content::JSON)
+            .text(json!({"status": "ok"}))
+            .send()?;
+
+        ctx.app().database.insert_analytics(data)?;
+
         Ok(())
     });
+}
+
+impl Request {
+    pub fn into_analytics(self, ip: Ipv4Addr) -> Analytics {
+        Analytics {
+            ip,
+            page: self.page,
+            method: self.method,
+            referrer: self.referrer,
+            user_agent: self.user_agent,
+        }
+    }
 }

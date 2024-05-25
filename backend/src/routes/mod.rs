@@ -2,7 +2,7 @@ use afire::Server;
 
 use crate::app::App;
 
-mod analytics;
+pub mod analytics;
 mod downloads;
 mod files;
 mod ip;

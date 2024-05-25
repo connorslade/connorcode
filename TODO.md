@@ -11,3 +11,4 @@
 - [x] Meta descriptions
 - [ ] Projects in rss feed
 - [x] Writing category pages
+- [ ] Analytics

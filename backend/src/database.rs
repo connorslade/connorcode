@@ -2,7 +2,7 @@ use std::process;
 
 use anyhow::Result;
 use parking_lot::{MappedMutexGuard, Mutex, MutexGuard};
-use rusqlite::Connection;
+use rusqlite::{params, Connection};
 use tracing::{error, info};
 
 // Increment every time schema changes in a non backwards compatible way, even in dev
@@ -59,7 +59,7 @@ impl Db {
         }
 
         let trans = this.transaction()?;
-        for i in [] {
+        for i in [include_str!("sql/init_analytics.sql")] {
             trans.execute(i, [])?;
         }
         trans.commit()?;
@@ -74,6 +74,23 @@ impl Db {
         this.pragma_update(None, "wal_checkpoint", "TRUNCATE")?;
         drop(this);
 
+        Ok(())
+    }
+}
+
+impl Db {
+    pub fn insert_analytics(&self, data: crate::routes::analytics::Analytics) -> Result<()> {
+        let ip = u32::from_be_bytes(data.ip.octets());
+        self.lock().execute(
+            "INSERT INTO analytics VALUES (?, ?, ?, ?, ?)",
+            params![
+                ip,
+                data.page,
+                data.method as u8,
+                data.referrer,
+                data.user_agent
+            ],
+        )?;
         Ok(())
     }
 }
