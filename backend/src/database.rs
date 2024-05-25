@@ -82,14 +82,8 @@ impl Db {
     pub fn insert_analytics(&self, data: crate::routes::analytics::Analytics) -> Result<()> {
         let ip = u32::from_be_bytes(data.ip.octets());
         self.lock().execute(
-            "INSERT INTO analytics VALUES (?, ?, ?, ?, ?)",
-            params![
-                ip,
-                data.page,
-                data.method as u8,
-                data.referrer,
-                data.user_agent
-            ],
+            "INSERT INTO analytics VALUES (?, ?, ?, ?)",
+            params![ip, data.page, data.referrer, data.user_agent],
         )?;
         Ok(())
     }

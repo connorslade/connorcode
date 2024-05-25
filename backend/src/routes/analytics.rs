@@ -14,28 +14,13 @@ use crate::app::App;
 pub struct Analytics {
     pub ip: Ipv4Addr,
     pub page: String,
-    pub method: Method,
     pub referrer: Option<String>,
     pub user_agent: Option<String>,
-}
-
-#[repr(u8)]
-#[derive(Debug, Deserialize)]
-pub enum Method {
-    GET,
-    POST,
-    PUT,
-    DELETE,
-    OPTIONS,
-    HEAD,
-    PATCH,
-    TRACE,
 }
 
 #[derive(Deserialize)]
 struct Request {
     page: String,
-    method: Method,
     referrer: Option<String>,
     user_agent: Option<String>,
 }
@@ -64,7 +49,6 @@ impl Request {
         Analytics {
             ip,
             page: self.page,
-            method: self.method,
             referrer: self.referrer,
             user_agent: self.user_agent,
         }

@@ -1,12 +1,49 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import Link from '$lib/components/Link.svelte';
 	import { GITHUB, VERSION } from '$lib/consts';
 
 	import '../styles/main.scss';
+	import { navigating } from '$app/stores';
 
 	function current_year(): number {
 		return Math.max(new Date().getFullYear(), 2024);
 	}
+
+	function send_analytics(data: {
+		page: string;
+		referrer: string | null;
+		user_agent: string | null;
+	}) {
+		fetch(`/api/analytics`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}).catch((err) => console.error('Analytics Error', err));
+	}
+
+	onMount(() => {
+		send_analytics({
+			page: window.location.pathname,
+			referrer: document.referrer === '' ? null : document.referrer,
+			user_agent: navigator.userAgent === '' ? null : navigator.userAgent
+		});
+	});
+
+	let last_page = '';
+	$navigating?.complete.then(() => {
+		let page = $navigating.to?.url!.pathname!;
+		if (page === last_page) return;
+		last_page = page;
+		send_analytics({
+			page,
+			referrer: $navigating.from?.url.toString() ?? null,
+			user_agent: navigator.userAgent === '' ? null : navigator.userAgent
+		});
+	});
 </script>
 
 <div class="root">
