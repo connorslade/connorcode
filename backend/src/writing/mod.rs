@@ -57,7 +57,10 @@ impl Writing {
     pub fn get_articles(&self) -> impl Iterator<Item = &Article> {
         self.articles
             .iter()
-            .filter(|x| !x.front_matter.hidden.unwrap_or_default())
+            .filter(|x| match x.front_matter.hidden {
+                Some(hidden) => !hidden,
+                None => x.front_matter.path.slug.is_some(),
+            })
     }
 
     pub fn get_projects(&self) -> impl Iterator<Item = &Project> {
