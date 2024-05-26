@@ -38,33 +38,26 @@ pub enum DocumentType {
 
 impl Writing {
     pub fn find_article(&self, category: &str, article: &str) -> Option<&Article> {
-        self.articles
-            .iter()
-            .filter(|x| !x.front_matter.hidden)
-            .find(|x| {
-                x.front_matter.path.category == category
-                    && matches!(x.front_matter.path.slug, Some(ref slug) if slug == article)
-            })
+        self.articles.iter().find(|x| {
+            x.front_matter.path.category == category
+                && matches!(x.front_matter.path.slug, Some(ref slug) if slug == article)
+        })
     }
 
     pub fn find_article_category(&self, category: &str) -> Option<&Article> {
-        self.articles
-            .iter()
-            .filter(|x| !x.front_matter.hidden)
-            .find(|x| {
-                x.front_matter.path.category == category && x.front_matter.path.slug.is_none()
-            })
+        self.articles.iter().find(|x| {
+            x.front_matter.path.category == category && x.front_matter.path.slug.is_none()
+        })
     }
 
     pub fn find_project(&self, path: &str) -> Option<&Project> {
-        self.projects
-            .iter()
-            .filter(|x| !x.front_matter.hidden)
-            .find(|x| x.front_matter.slug == path)
+        self.projects.iter().find(|x| x.front_matter.slug == path)
     }
 
     pub fn get_articles(&self) -> impl Iterator<Item = &Article> {
-        self.articles.iter().filter(|x| !x.front_matter.hidden)
+        self.articles
+            .iter()
+            .filter(|x| !x.front_matter.hidden.unwrap_or_default())
     }
 
     pub fn get_projects(&self) -> impl Iterator<Item = &Project> {

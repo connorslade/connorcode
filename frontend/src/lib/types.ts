@@ -4,6 +4,7 @@ export type ArticleInfo = {
 	path: string;
 	tags: string[];
 	title: string;
+	hidden: boolean | null;
 	word_count: number;
 	views: number;
 };

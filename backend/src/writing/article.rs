@@ -17,8 +17,8 @@ pub struct ArticleFrontMatter {
 
     pub title: String,
     pub description: String,
-    #[serde(default)]
-    pub hidden: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hidden: Option<bool>,
 
     #[serde(flatten)]
     pub date: Date,

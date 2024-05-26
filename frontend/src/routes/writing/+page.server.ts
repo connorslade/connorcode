@@ -9,9 +9,10 @@ export const load: PageServerLoad = async ({
 	const raw_articles: ArticleInfo[] = await (
 		await fetch(`${env.API_SERVER_ADDRESS}/api/writing/list`)
 	).json();
-	const articles = raw_articles.filter(
-		(article) => article.path.includes('/') && !article.path.startsWith('/')
-	);
+	const articles = raw_articles.filter((article) => {
+		let is_article = article.path.includes('/') && !article.path.startsWith('/');
+		return is_article || article.hidden === false;
+	});
 
 	return { articles };
 };

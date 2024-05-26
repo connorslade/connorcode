@@ -17,7 +17,8 @@
 
 <p>
 	Here are some random things I have written about. To get notified when new posts are published,
-	you can subscribe to the <a href="writing.rss">RSS feed</a>.
+	you can subscribe to the <a href="writing.rss">RSS feed</a>. Some of my older articles have been
+	<a href="/writing/archive">archived</a>.
 </p>
 
 <hr />
