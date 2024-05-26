@@ -33,7 +33,7 @@
 <Title
 	title={data.info.title}
 	info="published {data.info.date} &bull; {reading_time}m reading time &bull; {data.info
-		.views} views"
+		.views} view{data.info.views == 1 ? '' : 's'}"
 />
 
 <HtmlRenderer html={data.html} base={`/writing/${data.info.path}/`} />

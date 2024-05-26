@@ -30,7 +30,7 @@
 		<Title
 			title={data.info.name}
 			info="created {date.human_date()} &bull; {reading_time}m reading time &bull; {data.info
-				.views} views"
+				.views} view{data.info.views == 1 ? '' : 's'}"
 		/>
 	</div>
 	<div class="icons">
