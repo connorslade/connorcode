@@ -21,12 +21,15 @@
 	<a href="/writing/archive">archived</a>.
 </p>
 
-<hr />
-
 {#each data.articles as article, idx}
-	{#if idx != 0}
+	{#if idx == 0 || (idx + 1 < data.articles.length && dates[idx].year != dates[idx - 1].year)}
+		<hr class="year-rule" />
+		<h2 class="year">{dates[idx].year}</h2>
+		<hr class="year-rule" />
+	{:else}
 		<Rule thickness="thin" />
 	{/if}
+
 	<div class="project">
 		<a href={`writing/${article.path}`} class="project-link">
 			<div class="title-container">
@@ -57,5 +60,14 @@
 		justify-content: space-between;
 		align-items: center;
 		margin-top: 18.72px;
+	}
+
+	.year {
+		text-align: center;
+	}
+
+	.year-rule {
+		border: none;
+		border-bottom: double;
 	}
 </style>
