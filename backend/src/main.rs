@@ -6,7 +6,7 @@ use afire::{
 };
 use anyhow::Result;
 use dotenvy::dotenv_override;
-use tracing::{info, level_filters::LevelFilter};
+use tracing::{info, level_filters::LevelFilter, warn};
 use tracing_subscriber::{filter, layer::SubscriberExt, util::SubscriberInitExt};
 
 use app::App;
@@ -33,7 +33,10 @@ fn main() -> Result<()> {
         .with(filter)
         .with(tracing_subscriber::fmt::layer())
         .init();
-    dotenv_override().unwrap();
+
+    if let Err(e) = dotenv_override() {
+        warn!("Failed to load .env: {}", e);
+    }
 
     let config = Config::from_env()?;
 
