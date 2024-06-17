@@ -9,3 +9,7 @@ export function human_file_size(size: number): string {
 
 	return `${size.toFixed(0)} ${UNITS[idx]}`;
 }
+
+export function html_to_text(html: string): string {
+	return html.replace(/<[^>]+>/g, '');
+}

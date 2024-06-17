@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { html_to_text } from '$lib/utils';
+
 	export let title: string;
 	export let description: string;
 	export let article: boolean = false;
@@ -10,7 +12,7 @@
 	<meta name="description" content={description} />
 
 	<meta property="og:title" content={title} />
-	<meta property="og:description" content={description} />
+	<meta property="og:description" content={html_to_text(description)} />
 	{#if published}
 		<meta property="article:published_time" content={published.toISOString()} />
 	{/if}
