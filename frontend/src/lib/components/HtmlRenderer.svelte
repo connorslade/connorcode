@@ -53,7 +53,6 @@
 		for (let src of src_scripts) {
 			let script = document.createElement('script');
 			script.src = base + src;
-			console.log(script.src);
 			document.body.appendChild(script);
 		}
 

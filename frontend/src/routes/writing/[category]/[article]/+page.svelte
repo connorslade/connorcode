@@ -26,7 +26,12 @@
 	$: reading_time = (data.info.word_count / 3.5 / 60).toFixed(0);
 </script>
 
-<Head title={data.info.title} description={data.info.description} />
+<Head
+	title={data.info.title}
+	description={data.info.description}
+	article={true}
+	published={new Date(data.info.date)}
+/>
 
 <Breadcrumbs crumbs={crumbs(data.info.path)} links={crumb_links(data.info.path)} />
 
