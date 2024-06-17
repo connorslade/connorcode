@@ -13,3 +13,20 @@ export function human_file_size(size: number): string {
 export function html_to_text(html: string): string {
 	return html.replace(/<[^>]+>/g, '');
 }
+
+export function image_mime(filename: string): string {
+	const ext = filename.split('.').pop();
+	switch (ext) {
+		case 'jpg':
+		case 'jpeg':
+			return 'image/jpeg';
+		case 'png':
+			return 'image/png';
+		case 'gif':
+			return 'image/gif';
+		case 'webp':
+			return 'image/webp';
+		default:
+			return 'image/jpeg';
+	}
+}

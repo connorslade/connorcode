@@ -23,6 +23,7 @@
 
 	export let data: PageData;
 
+	let _crumbs = crumbs(data.info.path);
 	$: reading_time = (data.info.word_count / 3.5 / 60).toFixed(0);
 </script>
 
@@ -31,9 +32,11 @@
 	description={data.info.description}
 	article={true}
 	published={new Date(data.info.date)}
+	section={_crumbs[1]}
+	hero={data.info.hero}
 />
 
-<Breadcrumbs crumbs={crumbs(data.info.path)} links={crumb_links(data.info.path)} />
+<Breadcrumbs crumbs={_crumbs} links={crumb_links(data.info.path)} />
 
 <Title
 	title={data.info.title}

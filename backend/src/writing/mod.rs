@@ -180,6 +180,12 @@ pub fn load_document(
 }
 
 #[derive(Deserialize, Serialize)]
+pub struct Hero {
+    pub image: String,
+    pub alt: String,
+}
+
+#[derive(Deserialize, Serialize)]
 pub struct Date {
     #[serde(
         deserialize_with = "parse_naive_date",
@@ -211,4 +217,11 @@ where
     S: Serializer,
 {
     serializer.serialize_str(&date.format("%m/%d/%Y").to_string())
+}
+
+fn error_parsing_frontmatter(path: &Path) -> String {
+    format!(
+        "Error parsing frontmatter for `{}`",
+        path.file_name().unwrap_or_default().to_string_lossy()
+    )
 }

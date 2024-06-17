@@ -8,7 +8,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::markdown;
 
-use super::{Date, Document};
+use super::{error_parsing_frontmatter, Date, Document, Hero};
 
 #[derive(Deserialize, Serialize)]
 pub struct ArticleFrontMatter {
@@ -22,6 +22,7 @@ pub struct ArticleFrontMatter {
 
     #[serde(flatten)]
     pub date: Date,
+    pub hero: Option<Hero>,
     pub tags: Vec<String>,
 }
 
@@ -45,7 +46,7 @@ pub fn load(
     word_count: u32,
 ) -> Result<Document<ArticleFrontMatter>> {
     let mut front_matter = serde_yaml::from_str::<ArticleFrontMatter>(front_matter)
-        .context("Error parsing frontmatter")?;
+        .with_context(|| error_parsing_frontmatter(&filesystem_path))?;
     front_matter.description = markdown::render(&front_matter.description).html;
     Ok(Document {
         front_matter,

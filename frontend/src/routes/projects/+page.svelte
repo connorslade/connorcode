@@ -10,10 +10,17 @@
 	import GithubLogo from 'phosphor-svelte/lib/GithubLogo';
 	import LinkIcon from 'phosphor-svelte/lib/Link';
 	import { PushPin } from 'phosphor-svelte';
+	import Head from '$lib/components/Head.svelte';
 
 	export let data: PageData;
 	$: dates = data.projects.map((project) => new NaiveDate(project.date));
 </script>
+
+<Head
+	title="Projects"
+	description="List of articles on some of my more interesting or complete projects explaining what they
+	do and how they work."
+/>
 
 <h1>Projects</h1>
 

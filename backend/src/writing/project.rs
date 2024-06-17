@@ -5,16 +5,17 @@ use serde::{Deserialize, Serialize};
 
 use crate::markdown;
 
-use super::{Date, Document};
+use super::{error_parsing_frontmatter, Date, Document, Hero};
 
 #[derive(Deserialize, Serialize)]
 pub struct ProjectFrontMatter {
     pub name: String,
     pub slug: String,
 
+    pub description: String,
     #[serde(flatten)]
     pub date: Date,
-    pub description: String,
+    pub hero: Option<Hero>,
     #[serde(default)]
     pub pinned: bool,
     #[serde(default)]
@@ -39,7 +40,7 @@ pub fn load(
     word_count: u32,
 ) -> Result<Document<ProjectFrontMatter>> {
     let mut front_matter = serde_yaml::from_str::<ProjectFrontMatter>(front_matter)
-        .context("Error parsing frontmatter")?;
+        .with_context(|| error_parsing_frontmatter(&filesystem_path))?;
     front_matter.description = markdown::render(&front_matter.description).html;
     Ok(Document {
         front_matter,

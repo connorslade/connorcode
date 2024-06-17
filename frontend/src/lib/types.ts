@@ -1,9 +1,11 @@
 export type ArticleInfo = {
+	path: string;
+	title: string;
 	date: string;
 	description: string;
-	path: string;
 	tags: string[];
-	title: string;
+	hero: Hero;
+
 	hidden: boolean | null;
 	word_count: number;
 	views: number;
@@ -14,12 +16,19 @@ export type ProjectInfo = {
 	name: string;
 	date: string;
 	description: string;
+	hero: Hero;
+
 	word_count: number;
 	pinned: boolean;
 	views: number;
 
 	github: string | null;
 	link: string | null;
+};
+
+export type Hero = {
+	image: string;
+	alt: string;
 };
 
 export class Heading {

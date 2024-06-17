@@ -22,6 +22,8 @@
 	description={data.info.description}
 	article={true}
 	published={new Date(data.info.date)}
+	section="projects"
+	hero={data.info.hero}
 />
 
 <Breadcrumbs
