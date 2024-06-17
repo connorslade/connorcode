@@ -35,9 +35,36 @@
 		});
 	});
 
+	let loader: HTMLDivElement;
+	let loader_value = 0;
+	let loader_interval: NodeJS.Timeout | null = null;
+
 	let last_page = '';
 	navigating.subscribe((navigating) => {
+		if (loader != null && loader_interval == null) {
+			loader.style.transition = 'none';
+			loader.style.width = '0%';
+			loader.style.opacity = '1';
+			loader_interval = setInterval(() => {
+				loader_value += 1;
+				if (loader_value < 10) return;
+				const k = 80,
+					w = 100;
+				let value = Math.min((2 * k) / (1 + Math.exp(-loader_value / w)) - k, k);
+				loader.style.width = `${value}%`;
+			}, 10);
+		}
+
 		navigating?.complete.then(() => {
+			if (loader != null && loader_interval != null) {
+				if (loader_value) loader.style.transition = 'width 1s, opacity 1s';
+				loader.style.width = '100%';
+				loader.style.opacity = '0';
+				clearInterval(loader_interval);
+				loader_interval = null;
+				loader_value = 0;
+			}
+
 			let page = navigating.to?.url!.pathname!;
 			if (page === last_page) return;
 			last_page = page;
@@ -51,6 +78,8 @@
 </script>
 
 <div class="root">
+	<div class="loader" bind:this={loader}></div>
+
 	<div class="nav">
 		<a class="name" href="/">Connor Slade</a>
 
@@ -103,6 +132,18 @@
 				text-decoration: underline;
 			}
 		}
+	}
+
+	.loader {
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 2px;
+		background-color: var(--code-color);
+		overflow: hidden;
+		transition:
+			width 1s,
+			opacity 1s;
 	}
 
 	.footer-rule {
