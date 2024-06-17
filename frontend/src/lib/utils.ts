@@ -26,6 +26,8 @@ export function image_mime(filename: string): string {
 			return 'image/gif';
 		case 'webp':
 			return 'image/webp';
+		case 'bmp':
+			return 'image/bmp';
 		default:
 			return 'image/jpeg';
 	}
