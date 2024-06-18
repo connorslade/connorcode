@@ -1,3 +1,5 @@
+use std::{collections::HashMap, fs};
+
 use anyhow::{Context, Result};
 use parking_lot::RwLock;
 
@@ -11,6 +13,7 @@ pub struct App {
     pub database: Db,
     pub config: Config,
 
+    pub redirects: HashMap<String, String>,
     pub writing: RwLock<Writing>,
 }
 
@@ -21,9 +24,14 @@ impl App {
         let database = Db::new(connection);
         database.init().context("Initializing database")?;
 
+        let raw_redirects =
+            fs::read_to_string(&config.redirect_path).context("Reading redirects file")?;
+        let redirects = toml::from_str(&raw_redirects).context("Parsing redirects file")?;
+
         let writing = RwLock::new(writing::load(&config.writing_path).context("Loading articles")?);
 
         Ok(Self {
+            redirects,
             writing,
             database,
             config,

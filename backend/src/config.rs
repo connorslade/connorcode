@@ -9,6 +9,7 @@ pub struct Config {
     pub database: PathBuf,
     pub external_url: String,
 
+    pub redirect_path: PathBuf,
     pub files_path: PathBuf,
     pub writing_path: PathBuf,
 }
@@ -26,6 +27,7 @@ impl Config {
             database: env("DATABASE")?.into(),
             external_url: env("EXTERNAL_URL")?,
 
+            redirect_path: env("REDIRECT_PATH")?.into(),
             files_path: env("FILES_PATH")?.into(),
             writing_path: env("WRITING_PATH")?.into(),
         })

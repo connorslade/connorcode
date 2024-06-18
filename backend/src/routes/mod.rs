@@ -6,6 +6,7 @@ pub mod analytics;
 mod downloads;
 mod files;
 mod ip;
+mod redirect;
 mod writing;
 
 pub fn attach(server: &mut Server<App>) {
@@ -13,5 +14,6 @@ pub fn attach(server: &mut Server<App>) {
     downloads::attach(server);
     files::attach(server);
     ip::attach(server);
+    redirect::attach(server);
     writing::attach(server);
 }
