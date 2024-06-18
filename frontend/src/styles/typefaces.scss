@@ -6,17 +6,17 @@ $jetbrains-mono: 'JetBrainsMono', monospace;
 
 @font-face {
 	font-family: 'DejaVuSans';
-	src: url('/fonts/DejaVuSans.ttf');
+	src: url('/fonts/DejaVuSans.woff2') format('woff2');
 }
 @font-face {
 	font-family: 'DejaVuSans';
-	src: url('/fonts/DejaVuSans-Bold.ttf');
+	src: url('/fonts/DejaVuSans-Bold.woff2') format('woff2');
 	font-weight: bold;
 }
 $deja-vu-sans: 'DejaVuSans', sans-serif;
 
 @font-face {
-	font-family: "LatinModern Math";
-	src: url('/fonts/latinmodern-math.otf');
+	font-family: 'LatinModern Math';
+	src: url('/fonts/latinmodern-math.woff2') format('woff2');
 }
-$latin-modern-math: "LatinModern Math";
+$latin-modern-math: 'LatinModern Math';
