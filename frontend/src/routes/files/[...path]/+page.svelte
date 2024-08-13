@@ -19,6 +19,8 @@
 		return parts.slice(0, parts.length - depth).join('/');
 	}
 
+	let current_time = new Date().getTime();
+
 	export let data: PageData;
 </script>
 
@@ -57,7 +59,9 @@
 				{file.name}
 			</div>
 			<div class="size">{file.is_dir ? '' : human_file_size(file.size)}</div>
-			<div class="updated">{humanize_duration(file.last_modified, { largest: 1 })} ago</div>
+			<div class="updated">
+				{humanize_duration(current_time - file.last_modified * 1000, { largest: 1 })} ago
+			</div>
 		</a>
 	{/each}
 
