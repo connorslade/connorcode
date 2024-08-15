@@ -42,6 +42,7 @@ fn main() -> Result<()> {
 
     let mut server = Server::<App>::new(&config.host, config.port)
         .workers(config.threads)
+        .keep_alive(config.keep_alive)
         .state(App::new(config)?);
 
     RequestLogger.attach(&mut server);

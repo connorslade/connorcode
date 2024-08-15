@@ -6,6 +6,7 @@ pub struct Config {
     pub host: String,
     pub port: u16,
     pub threads: usize,
+    pub keep_alive: bool,
     pub database: PathBuf,
     pub external_url: String,
 
@@ -24,6 +25,7 @@ impl Config {
             host: env("HOST")?,
             port: env("PORT")?.parse()?,
             threads: env("THREADS")?.parse()?,
+            keep_alive: env("KEEP_ALIVE")?.parse()?,
             database: env("DATABASE")?.into(),
             external_url: env("EXTERNAL_URL")?,
 
