@@ -146,7 +146,7 @@ pub fn load_document(
     let writing_path = &writing_dir.join("writing");
 
     let contents = fs::read_to_string(path)?;
-    let rendered = markdown::render(&contents);
+    let rendered = markdown::render(&contents, Some(path.parent().unwrap().to_path_buf()));
 
     let Some(front_matter) = &rendered.front_matter else {
         bail!(

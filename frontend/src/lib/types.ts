@@ -1,3 +1,8 @@
+export type ImageSize = {
+	width: number;
+	height: number;
+};
+
 export type ArticleInfo = {
 	path: string;
 	title: string;

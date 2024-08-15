@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import { Html, isTag, Element } from 'html-svelte-parser';
 
 	import Admonition from './Admonition.svelte';
 	import InnerLink from './InnerLink.svelte';
 	import Link from './Link.svelte';
-	import { onMount } from 'svelte';
+	import Image from './Image.svelte';
 
 	let src_scripts: string[] = [];
 	let inline_scripts: string[] = [];
@@ -38,6 +40,19 @@
 					}
 				};
 			else if (!href.startsWith('/')) node.attribs['href'] = base + href;
+		} else if (node.name == 'img' && 'hash' in node.attribs) {
+			return {
+				component: Image,
+				props: {
+					src: base + node.attribs['src'],
+					alt: node.attribs['alt'],
+					hash: node.attribs['hash'],
+					size: {
+						width: parseInt(node.attribs['width']),
+						height: parseInt(node.attribs['height'])
+					}
+				}
+			};
 		} else if (node.name == 'script') {
 			if ('src' in node.attribs) src_scripts.push(node.attribs['src']);
 			else inline_scripts.push((node.children[0] as any).data);

@@ -41,7 +41,7 @@ pub fn load(
 ) -> Result<Document<ProjectFrontMatter>> {
     let mut front_matter = serde_yaml::from_str::<ProjectFrontMatter>(front_matter)
         .with_context(|| error_parsing_frontmatter(&filesystem_path))?;
-    front_matter.description = markdown::render(&front_matter.description).html;
+    front_matter.description = markdown::render(&front_matter.description, None).html;
     Ok(Document {
         front_matter,
         filesystem_path,

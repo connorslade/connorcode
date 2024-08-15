@@ -1,5 +1,13 @@
-use std::{cell::RefCell, collections::VecDeque, io::BufWriter, sync::OnceLock};
+use std::{
+    cell::RefCell,
+    collections::VecDeque,
+    fs::File,
+    io::{BufReader, BufWriter},
+    path::{Path, PathBuf},
+    sync::OnceLock,
+};
 
+use anyhow::Result;
 use comrak::{
     arena_tree::Node,
     format_html_with_plugins,
@@ -8,8 +16,10 @@ use comrak::{
     plugins::syntect::SyntectAdapterBuilder,
     Arena, ExtensionOptions, Options, ParseOptions, Plugins, RenderOptions,
 };
+use image::{imageops::FilterType, GenericImageView, ImageFormat, ImageReader};
 use latex2mathml::{latex_to_mathml, DisplayStyle};
 use syntect::{highlighting::ThemeSet, parsing::SyntaxSet};
+use tracing::warn;
 
 use crate::regex;
 
@@ -76,7 +86,7 @@ pub fn default_plugins() -> &'static Plugins<'static> {
     })
 }
 
-pub fn render(markdown: &str) -> RenderedMarkdown {
+pub fn render(markdown: &str, working_dir: Option<PathBuf>) -> RenderedMarkdown {
     let options = &default_config();
     let arena = Arena::new();
 
@@ -99,8 +109,8 @@ pub fn render(markdown: &str) -> RenderedMarkdown {
 
     let mut children = VecDeque::from_iter([root]);
     while let Some(child) = children.pop_front() {
-        children.extend(child.children());
         let mut node = child.data.borrow_mut();
+        let mut extend_children = true;
 
         match &node.value {
             NodeValue::Text(text) => count_words(text),
@@ -112,7 +122,7 @@ pub fn render(markdown: &str) -> RenderedMarkdown {
         match &node.value {
             NodeValue::FrontMatter(matter) => front_matter = Some(matter.to_owned()),
             NodeValue::Math(math) => {
-                let mathml = latex_to_mathml(
+                let math_ml = latex_to_mathml(
                     &math.literal,
                     if math.display_math {
                         DisplayStyle::Block
@@ -120,8 +130,8 @@ pub fn render(markdown: &str) -> RenderedMarkdown {
                         DisplayStyle::Inline
                     },
                 );
-                match mathml {
-                    Ok(mathml) => node.value = NodeValue::HtmlInline(mathml),
+                match math_ml {
+                    Ok(math_ml) => node.value = NodeValue::HtmlInline(math_ml),
                     Err(e) => {
                         node.value =
                             NodeValue::Text(format!("Error rendering LaTeX to MathML: {e}"))
@@ -152,7 +162,41 @@ pub fn render(markdown: &str) -> RenderedMarkdown {
                     }
                 }
             }
+            NodeValue::Image(image)
+                if !image.url.starts_with("http") && !image.url.starts_with('/') =>
+            {
+                if let Some(working_dir) = &working_dir {
+                    let path = working_dir.join(&image.url);
+
+                    extend_children = false;
+                    let mut alt = String::new();
+                    let mut stack = child.children().collect::<VecDeque<_>>();
+                    while let Some(this_child) = stack.pop_front() {
+                        stack.extend(this_child.children());
+                        let this_node = this_child.data.borrow();
+                        if let NodeValue::Text(text) = &this_node.value {
+                            alt.push_str(text);
+                        }
+                    }
+
+                    match try_handle_image(&path) {
+                        Ok((size, hash)) => {
+                            let mut parent = child.parent().unwrap().data.borrow_mut();
+                            parent.value = NodeValue::HtmlInline(format!(
+                                r#"<img src="{}" alt="{}" width="{}" height="{}" hash="{}">"#,
+                                image.url, alt, size.0, size.1, hash
+                            ));
+                            child.detach();
+                        }
+                        Err(err) => warn!("Error loading image `{}`: {err}", image.url),
+                    }
+                }
+            }
             _ => {}
+        }
+
+        if extend_children {
+            children.extend(child.children());
         }
     }
 
@@ -165,4 +209,16 @@ pub fn render(markdown: &str) -> RenderedMarkdown {
         front_matter,
         word_count,
     }
+}
+
+fn try_handle_image(image: &Path) -> Result<((u32, u32), String)> {
+    let file = File::open(image)?;
+    let format = ImageFormat::from_path(image).unwrap_or(ImageFormat::Png);
+
+    let image = ImageReader::with_format(BufReader::new(file), format).decode()?;
+    let thumb = image.resize_exact(32, 32, FilterType::Nearest);
+    let (width, height) = image.dimensions();
+
+    let hash = blurhash::encode(4, 3, 32, 32, thumb.to_rgba8().as_raw())?;
+    Ok(((width, height), hash))
 }
