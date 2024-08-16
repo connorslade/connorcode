@@ -62,4 +62,10 @@
 			margin: 0;
 		}
 	}
+
+	@media print {
+		.admonition {
+			break-inside: avoid;
+		}
+	}
 </style>

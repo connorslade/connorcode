@@ -5,7 +5,7 @@
 	export let links: string[];
 </script>
 
-<p {style} class="breadcrumb-container">
+<p {style} class="breadcrumb-container no-print">
 	{#each crumbs as crumb, idx}
 		{#if idx != 0}
 			&nbsp;»

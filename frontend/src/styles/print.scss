@@ -1,0 +1,13 @@
+@media print {
+	:root {
+		--background-color: white !important;
+
+		--text-color: black !important;
+		--alternate-text-color: black !important;
+		--link-color: blue !important;
+	}
+
+	.no-print {
+		display: none !important;
+	}
+}

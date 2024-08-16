@@ -78,9 +78,9 @@
 </script>
 
 <div class="root">
-	<div class="loader" bind:this={loader}></div>
+	<div class="loader no-print" bind:this={loader}></div>
 
-	<div class="nav">
+	<div class="nav no-print">
 		<a class="name" href="/">Connor Slade</a>
 
 		<div class="links">
