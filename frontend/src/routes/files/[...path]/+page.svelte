@@ -43,11 +43,13 @@
 		</p>
 	{/if}
 
-	{#if path != ''}
-		<a href={`/files/${parent(1)}`} class="file">
-			<div class="name"><Folder /> ..</div>
-		</a>
-	{/if}
+	{#key path}
+		{#if path != ''}
+			<a href={`/files/${parent(1)}`} class="file">
+				<div class="name"><Folder /> ..</div>
+			</a>
+		{/if}
+	{/key}
 
 	{#each data.children as file}
 		<a
