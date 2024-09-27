@@ -62,7 +62,7 @@
 			</div>
 			<div class="size">{file.is_dir ? '' : human_file_size(file.size)}</div>
 			<div class="updated">
-				{humanize_duration(current_time - file.last_modified * 1000, { largest: 1 })} ago
+				{humanize_duration(current_time - file.last_modified * 1000, { largest: 1, round: true })} ago
 			</div>
 		</a>
 	{/each}
