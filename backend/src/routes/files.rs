@@ -40,17 +40,20 @@ pub fn attach(server: &mut Server<App>) {
         let local_path = url::decode(local_path);
         let path = app.config.files_path.join(&local_path);
 
-        ctx.header(Vary::headers([HeaderName::Accept]));
-        if let Some(accept) = ctx.req.headers.get(HeaderName::Accept) {
-            if accept.contains("text/html") {
-                let externial_url = &app.config.external_url;
-                ctx.redirect(format!("{externial_url}/files/{local_path}"))
-                    .send()?;
-                return Ok(());
-            }
-        }
-
         if path.is_dir() {
+            // Redirect to frontend file browser if the request is not an API
+            // request. This is to prevent users from seeing the raw json data
+            // if they modify the path maunally.
+            ctx.header(Vary::headers([HeaderName::Accept]));
+            if let Some(accept) = ctx.req.headers.get(HeaderName::Accept) {
+                if accept.contains("text/html") {
+                    let externial_url = &app.config.external_url;
+                    ctx.redirect(format!("{externial_url}/files/{local_path}"))
+                        .send()?;
+                    return Ok(());
+                }
+            }
+
             let mut children = Vec::new();
             let mut readme = None;
 
