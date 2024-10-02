@@ -4,7 +4,8 @@ use std::{
 };
 
 use afire::{
-    extensions::{serve_static::safe_path, RouteShorthands},
+    extensions::{serve_static::safe_path, RedirectResponse, RouteShorthands},
+    headers::Vary,
     internal::encoding::url,
     Content, HeaderName, Server,
 };
@@ -30,14 +31,24 @@ struct DirEntry {
 
 pub fn attach(server: &mut Server<App>) {
     server.get("/api/files**", move |ctx| {
+        let app = ctx.app();
+
         let mut local_path: &str = &safe_path(&ctx.req.path[10..]);
         if local_path.starts_with('/') {
             local_path = &local_path[1..];
         }
         let local_path = url::decode(local_path);
-        let path = ctx.app().config.files_path.join(&local_path);
+        let path = app.config.files_path.join(&local_path);
 
-        let no_file = ctx.req.query.has("no_file");
+        ctx.header(Vary::headers([HeaderName::Accept]));
+        if let Some(accept) = ctx.req.headers.get(HeaderName::Accept) {
+            if accept.contains("text/html") {
+                let externial_url = &app.config.external_url;
+                ctx.redirect(format!("{externial_url}/files/{local_path}"))
+                    .send()?;
+                return Ok(());
+            }
+        }
 
         if path.is_dir() {
             let mut children = Vec::new();
@@ -79,7 +90,7 @@ pub fn attach(server: &mut Server<App>) {
             let ext = path.extension().map(|x| x.to_string_lossy());
             let content = get_content_type(ext.as_deref());
 
-            if !no_file {
+            if !ctx.req.query.has("no_file") {
                 let file = File::open(path)?;
                 ctx.stream(file);
             }
