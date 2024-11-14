@@ -70,7 +70,7 @@
 	{#if data.readme != null}
 		<br />
 		<Rule style="dashed" />
-		<HtmlRenderer html={data.readme} />
+		<HtmlRenderer html={data.readme} base={`/files/${path}/`} />
 	{/if}
 {/if}
 
