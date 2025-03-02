@@ -24,7 +24,10 @@
 	export let data: PageData;
 </script>
 
-<Head title="Files" description="My file server." />
+<Head
+	title={parts[parts.length - 1] || 'Files'}
+	description={data.description ?? 'My file server.'}
+/>
 
 <h1>Files</h1>
 

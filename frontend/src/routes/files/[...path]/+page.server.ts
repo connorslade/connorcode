@@ -7,6 +7,7 @@ import * as _public from '$env/dynamic/public';
 type DirResponse = {
 	children: [DirEntry];
 	readme: string | null;
+	description: string | null;
 };
 
 type DirEntry = {
