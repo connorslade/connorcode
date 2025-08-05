@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Admonition from '$lib/components/Admonition.svelte';
 	import Head from '$lib/components/Head.svelte';
 	import Link from '$lib/components/Link.svelte';
 
@@ -30,10 +31,26 @@
 </p>
 
 <p>
-	I'm interested in software development, photography, Minecraft modding, and some web development
-	(as you can see). I'm currently a high school student in New Jersey interested in computer science
-	and computer engineering related things.
+	I'm currently a high school student in New Jersey interested in software development, photography,
+	Minecraft modding, and some web development (as you can see).
 </p>
+
+<Admonition type="info" title="Wishlist Beam Time on Steam">
+	<p>
+		I've been working on this game for a while now and it would really mean a lot to me if you could
+		check it out (wishlist pls). If you are at all interested in programming or how computers work,
+		I genuinely think you will enjoy this.
+	</p>
+
+	<br />
+	<iframe
+		title="Steam embed to wishlist Beam Time"
+		src="https://store.steampowered.com/widget/3385920/"
+		frameborder="0"
+		width="100%"
+		height="190"
+	></iframe>
+</Admonition>
 
 <h2>Contact</h2>
 
