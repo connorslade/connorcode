@@ -38,8 +38,8 @@
 <Admonition type="info" title="Wishlist Beam Time on Steam">
 	<p>
 		I've been working on this game for a while now and it would really mean a lot to me if you could
-		check it out (wishlist pls). If you are at all interested in programming or how computers work,
-		I genuinely think you will enjoy this.
+		check it out (wishlist pls). If you are interested in programming or how computers work (digital
+		logic), I think you will enjoy this.
 	</p>
 
 	<br />
@@ -76,6 +76,7 @@
 <ul class="project-list">
 	{#each data.projects as project}
 		<li>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<Link href={`projects/${project.slug}`} open_in="current-tab">{project.name}</Link> &mdash; {@html project.description}
 		</li>
 	{/each}
@@ -86,6 +87,7 @@
 <ul class="article-list">
 	{#each data.articles as article}
 		<li>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 			<Link href={`writing/${article.path}`} open_in="current-tab">{article.title}</Link> &mdash; {@html article.description}
 		</li>
 	{/each}
