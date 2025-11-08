@@ -31,7 +31,7 @@
 </p>
 
 <p>
-	I'm currently a high school student in New Jersey interested in software development, photography,
+	I'm currently a student at RPI in New York, interested in software development, photography,
 	Minecraft modding, and some web development (as you can see).
 </p>
 
@@ -93,7 +93,7 @@
 	{/each}
 </ul>
 
-<style>
+<style lang="scss">
 	:global(.article-list p),
 	:global(.project-list p) {
 		display: inline;
