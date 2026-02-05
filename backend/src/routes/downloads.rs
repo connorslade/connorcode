@@ -50,6 +50,7 @@ enum ServiceType {
     Github,
     Modrinth,
     CurseForge,
+    Flathub,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -64,13 +65,19 @@ struct Cached<T> {
 }
 
 impl ServiceType {
-    const ALL: [Self; 3] = [Self::Github, Self::Modrinth, Self::CurseForge];
+    const ALL: [Self; 4] = [
+        Self::Github,
+        Self::Modrinth,
+        Self::CurseForge,
+        Self::Flathub,
+    ];
 
     fn name(&self) -> &str {
         match self {
             Self::Github => "github",
             Self::Modrinth => "modrinth",
             Self::CurseForge => "curseforge",
+            Self::Flathub => "flathub",
         }
     }
 }
@@ -122,6 +129,11 @@ impl Service {
                 let url = format!("https://api.cfwidget.com/minecraft/mc-mods/{project}/download");
                 let json = ureq::get(&url).call()?.into_json::<Value>()?;
                 Ok(json["downloads"]["total"].as_u64().unwrap_or(0))
+            }
+            ServiceType::Flathub => {
+                let url = format!("https://flathub.org/api/v2/stats/{project}");
+                let json = ureq::get(&url).call()?.into_json::<Value>()?;
+                Ok(json["installs_total"].as_u64().unwrap_or(0))
             }
         }
     }
