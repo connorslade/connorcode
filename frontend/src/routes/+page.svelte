@@ -19,20 +19,15 @@
 
 <Head
 	title="Home"
-	description="Hello world, I'm Connor Slade. Welcome to my little place on the internet, connorcode.com version 3.0.0!"
+	description="Hello world, I'm Connor Slade. Welcome to my little place on the internet, connorcode.com version {VERSION}"
 />
 
 <h1>Home</h1>
 
 <p>
-	{get_greeting()} 👋, I'm Connor Slade. Welcome to my little place on the internet,
-	<Link href="https://connorcode.com">connorcode.com</Link> <em>version {VERSION}</em>! Finally
-	rewritten with Svelte. (It's still a work in progress).
-</p>
-
-<p>
-	I'm currently a student at RPI in New York, interested in software development, photography,
-	Minecraft modding, and some web development (as you can see).
+	{get_greeting()} 👋, I'm Connor Slade. Welcome to my little place on the internet. I'm currently a
+	college student interested in software development, radio communication, photography, Minecraft modding,
+	and some web development (as you can see).
 </p>
 
 <Admonition type="info" title="Wishlist Beam Time on Steam">

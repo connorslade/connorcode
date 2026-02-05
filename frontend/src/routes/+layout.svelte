@@ -9,7 +9,7 @@
 	import '../styles/main.scss';
 
 	function current_year(): number {
-		return Math.max(new Date().getFullYear(), 2024);
+		return Math.max(new Date().getFullYear(), 2026);
 	}
 
 	function send_analytics(data: {
