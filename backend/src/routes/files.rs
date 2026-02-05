@@ -80,7 +80,7 @@ pub fn attach(server: &mut Server<App>) {
             let mut children = files
                 .iter()
                 .filter(|(_, name, _)| {
-                    config.as_ref().map_or(true, |x| !x.hidden.contains(name))
+                    config.as_ref().is_none_or(|x| !x.hidden.contains(name))
                         && "config.toml" != name
                 })
                 .map(|(metadata, name, _)| DirEntry {

@@ -6,6 +6,7 @@ use afire::{error::AnyResult, route::RouteError};
 macro_rules! regex {
     ($raw:expr) => {{
         static REGEX: once_cell::sync::OnceCell<::regex::Regex> = once_cell::sync::OnceCell::new();
+        #[allow(clippy::regex_creation_in_loops)]
         REGEX.get_or_init(|| ::regex::Regex::new($raw).unwrap())
     }};
 }

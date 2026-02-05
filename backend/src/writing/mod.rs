@@ -107,7 +107,7 @@ pub fn load(raw_path: &Path) -> Result<Writing> {
             continue;
         }
 
-        if path.extension().map_or(true, |e| e != "md") {
+        if path.extension().is_none_or(|e| e != "md") {
             continue;
         }
 
